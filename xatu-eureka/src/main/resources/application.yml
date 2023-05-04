@@ -1,0 +1,17 @@
+server:
+  port: 8901  #端口号
+
+spring:
+  application:
+    name: xatu-eureka    #名称
+
+eureka:
+  instance:
+    hostname: localhost   #host地址（名称）
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    service-url:   #服务路径
+#      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+      defaultZone: http://localhost:8901/eureka/
+
