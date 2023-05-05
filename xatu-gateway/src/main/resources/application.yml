@@ -13,6 +13,22 @@ spring:
           uri: http://localhost:8904 #匹配后提供服务的路由地址
           predicates:
             - Path=/sys/** #断言 路径相匹配的进行路由
+        - id: user_routh #路由的id
+          uri: http://localhost:8905 #匹配后提供服务的路由地址
+          predicates:
+            - Path=/user/** #断言 路径相匹配的进行路由
+        - id: course_routh #路由的id
+          uri: http://localhost:8906 #匹配后提供服务的路由地址
+          predicates:
+            - Path=/course/** #断言 路径相匹配的进行路由
+        - id: homework_routh #路由的id
+          uri: http://localhost:8907 #匹配后提供服务的路由地址
+          predicates:
+            - Path=/homework/** #断言 路径相匹配的进行路由
+        - id: evalution_routh #路由的id
+          uri: http://localhost:8908 #匹配后提供服务的路由地址
+          predicates:
+            - Path=/evalution/** #断言 路径相匹配的进行路由
 #        - id: common_routh #路由的id
 #          uri: http://localhost:8903 #匹配后提供服务的路由地址
 #          predicates:
