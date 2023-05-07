@@ -6,16 +6,16 @@
         <groupId>com.xatu</groupId>
         <artifactId>XATUEducationSystem</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath>../pom.xml</relativePath>
     </parent>
-    <groupId>com.xatu</groupId>
-    <artifactId>eureka</artifactId>
+
+    <artifactId>xatu-eureka</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>xatu-eureka</name>
     <description>xatu-eureka</description>
     <properties>
         <java.version>1.8</java.version>
-        <spring-cloud.version>Finchley.SR2</spring-cloud.version>
+        <spring-cloud.version>Hoxton.SR12</spring-cloud.version>
     </properties>
     <dependencies>
         <dependency>
