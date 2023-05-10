@@ -3,6 +3,6 @@ package com.xatu.user.service;
 /**
  * @author Wang Lei
  */
-public interface UserService {
+public interface StudentService {
 
 }
