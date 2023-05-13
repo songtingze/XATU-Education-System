@@ -9,7 +9,7 @@ public class SingleCourseVO {
 
     private String courseNum;
 
-    private Integer index;
+    private Integer courseIndex;
 
     private Integer capacity;
 
@@ -26,4 +26,6 @@ public class SingleCourseVO {
     private String teacher;
 
     private String schedule;
+
+    private Integer selected;
 }

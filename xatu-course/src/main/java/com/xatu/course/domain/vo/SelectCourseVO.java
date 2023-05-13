@@ -11,7 +11,7 @@ public class SelectCourseVO {
 
     private String courseNum;
 
-    private Integer index;
+    private Integer courseIndex;
 
     private Integer capacity;
 
@@ -28,4 +28,6 @@ public class SelectCourseVO {
     private String teacher;
 
     private Map<String, Object> schedule;
+
+    private Integer selected;
 }

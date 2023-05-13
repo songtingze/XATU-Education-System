@@ -2,25 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xatu.course.mapper.SingleCourseMapper">
     <select id="selectAvailableByStudentNumber" resultType="com.xatu.course.domain.vo.SingleCourseVO">
-        select c.name,sc.index,sc.capacity,sc.remain,sc.info,c.credit,c.credit_hour,c.assessment,t.name,sc.schedule
+        select c.name,sc.course_num,sc.course_index,sc.capacity,sc.remain,sc.info,c.credit,c.credit_hour,c.assessment,t.name as teacher,sc.schedule,
+               IF(sc2.id is not null,1,0) as selected
         from single_course sc
         inner join course c on c.number = sc.course_num
         inner join teacher t on t.number = sc.teacher
+        left join select_course sc2 on sc2.course = sc.course_num and sc2.course_index = sc.course_index
         where c.school = (
             select school
             from student
             where number = #{number}
-        ) and c.grade = (
-            select YEAR(NOW()) - YEAR(enrollment_time) + 1
-            from student
-            where number = #{number}
-        )
+        ) and c.grade = #{grade}
     </select>
     <select id="selectSelectedByStudentNumber" resultType="com.xatu.course.domain.vo.SingleCourseVO">
-        select c.name,sc.index,sc.capacity,sc.remain,sc.info,c.credit,c.credit_hour,c.assessment,t.name,sc.schedule
+        select c.name,sc.course_num,sc.course_index,sc.capacity,sc.remain,sc.info,c.credit,c.credit_hour,c.assessment,t.name as teacher,sc.schedule
         from single_course sc
         inner join course c on c.number = sc.course_num
-        inner join select_course sc2 on sc2.course = sc.course_num and sc2.course_index = sc.index
+        inner join teacher t on t.number = sc.teacher
+        inner join select_course sc2 on sc2.course = sc.course_num and sc2.course_index = sc.course_index
         where sc2.student = #{student}
     </select>
 </mapper>

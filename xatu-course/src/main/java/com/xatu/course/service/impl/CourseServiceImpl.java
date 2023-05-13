@@ -1,5 +1,7 @@
 package com.xatu.course.service.impl;
 
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -9,20 +11,19 @@ import com.xatu.common.domain.PageResult;
 import com.xatu.common.domain.Result;
 import com.xatu.course.domain.SelectCourse;
 import com.xatu.course.domain.SingleCourse;
+import com.xatu.course.domain.Student;
 import com.xatu.course.domain.vo.SelectCourseVO;
 import com.xatu.course.domain.vo.SingleCourseVO;
 import com.xatu.course.mapper.SelectCourseMapper;
 import com.xatu.course.mapper.SingleCourseMapper;
+import com.xatu.course.mapper.StudentMapper;
 import com.xatu.course.service.CourseService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,9 +35,21 @@ public class CourseServiceImpl implements CourseService {
     @Resource
     private SingleCourseMapper singleCourseMapper;
 
+    @Resource
+    private StudentMapper studentMapper;
+
     @Override
     public PageResult<SelectCourseVO> listSelectAvailableCourse(Integer studentNumber, PageQuery pageQuery) {
-        Page<SingleCourseVO> pageResult = singleCourseMapper.selectAvailableByStudentNumber(studentNumber, pageQuery.build());
+        // 根据当前日期与入学日期的年份差，得到学生当前年级
+        LambdaQueryWrapper<Student> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Student::getNumber, studentNumber);
+        Student student = studentMapper.selectOne(wrapper);
+        Date enrollmentTime = student.getEnrollmentTime();
+        Date now = new Date();
+        int grade = (int) DateUtil.betweenYear(enrollmentTime, now, false) + 1;
+//        grade = 2;
+
+        Page<SingleCourseVO> pageResult = singleCourseMapper.selectAvailableByStudentNumber(studentNumber, grade, pageQuery.build());
         Page<SelectCourseVO> result = Page.of(pageResult.getCurrent(), pageResult.getSize());
         List<SelectCourseVO> selectCourseVOList = pageResult.getRecords().stream().map(src -> {
             SelectCourseVO dst = new SelectCourseVO();
@@ -53,7 +66,7 @@ public class CourseServiceImpl implements CourseService {
     public Result<Void> selectCourse(Integer studentNumber, String courseNum, Integer courseIndex) {
         // 先修改课余量
         LambdaQueryWrapper<SingleCourse> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(SingleCourse::getCourseNum, courseNum).eq(SingleCourse::getIndex, courseIndex);
+        wrapper.eq(SingleCourse::getCourseNum, courseNum).eq(SingleCourse::getCourseIndex, courseIndex);
         SingleCourse targetCourse = singleCourseMapper.selectOne(wrapper);
         if (targetCourse.getRemain() > 0) {
             targetCourse.setRemain(targetCourse.getRemain() - 1);
@@ -66,6 +79,9 @@ public class CourseServiceImpl implements CourseService {
         entity.setStudent(studentNumber);
         entity.setCourse(courseNum);
         entity.setCourseIndex(courseIndex);
+        Date now = new Date();
+        entity.setCreateTime(now);
+        entity.setUpdateTime(now);
         selectCourseMapper.insert(entity);
         return Result.success();
     }
@@ -75,14 +91,17 @@ public class CourseServiceImpl implements CourseService {
         List<SingleCourseVO> listResult = singleCourseMapper.selectSelectedByStudentNumber(studentNumber);
         Map<String, List<SelectCourseVO>> conflictingMap = new HashMap<>();
         for (SingleCourseVO singleCourse : listResult) {
+            // 遍历所选课程，以课程时间安排中的时间为key建立map，
             String schedule = singleCourse.getSchedule();
-            List<SelectCourseVO> conflictingList = conflictingMap.getOrDefault(schedule, new ArrayList<>());
+            String time = JSONUtil.parseObj(schedule).getStr("time");
+            List<SelectCourseVO> conflictingList = conflictingMap.getOrDefault(time, new ArrayList<>());
             SelectCourseVO dst = new SelectCourseVO();
             BeanUtils.copyProperties(singleCourse, dst);
             dst.setSchedule(JSONUtil.parseObj(singleCourse.getSchedule()));
             conflictingList.add(dst);
-            conflictingMap.put(schedule, conflictingList);
+            conflictingMap.put(time, conflictingList);
         }
+        // 一个时间下有多个课程的保留，即为冲突课程
         conflictingMap.keySet().removeIf(schedule -> conflictingMap.get(schedule).size() == 1);
         return Result.success(conflictingMap);
     }
@@ -91,7 +110,7 @@ public class CourseServiceImpl implements CourseService {
     public Result<Void> unselectCourse(Integer studentNumber, String courseNum, Integer courseIndex) {
         // 先修改课余量
         LambdaQueryWrapper<SingleCourse> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(SingleCourse::getCourseNum, courseNum).eq(SingleCourse::getIndex, courseIndex);
+        wrapper.eq(SingleCourse::getCourseNum, courseNum).eq(SingleCourse::getCourseIndex, courseIndex);
         SingleCourse targetCourse = singleCourseMapper.selectOne(wrapper);
         if (targetCourse.getRemain() < targetCourse.getCapacity()) {
             targetCourse.setRemain(targetCourse.getRemain() + 1);

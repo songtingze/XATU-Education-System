@@ -6,10 +6,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xatu.course.domain.SingleCourse;
 import com.xatu.course.domain.vo.SingleCourseVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface SingleCourseMapper extends BaseMapper<SingleCourse> {
-    Page<SingleCourseVO> selectAvailableByStudentNumber(Integer number, Page<SingleCourseVO> page);
+    Page<SingleCourseVO> selectAvailableByStudentNumber(@Param("number") Integer number, @Param("grade") Integer grade, Page<SingleCourseVO> page);
 
     List<SingleCourseVO> selectSelectedByStudentNumber(Integer number);
 }
