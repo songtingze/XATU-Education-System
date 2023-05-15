@@ -23,5 +23,6 @@ public class Student {
     private String household;
     private Date createTime;
     private Date updateTime;
+    private String photoUrl;
 
 }
