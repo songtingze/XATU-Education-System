@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xatu.course.mapper.StudentMapper">
+    <select id="listByCourse" resultType="com.xatu.course.domain.Student">
+        select s.name,s.number,s.school,s.enrollment_time
+        from student s
+        inner join select_course sc on sc.student = s.number
+        where sc.course = #{courseNum} and sc.course_index = #{courseIndex}
+    </select>
+</mapper>

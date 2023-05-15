@@ -7,26 +7,28 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class SelectCourse {
+public class SingleCourse {
 
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    private String course;
-
     private Integer courseIndex;
 
-    private Integer student;
+    private String courseNum;
 
-    private Integer score;
+    private Integer teacher;
 
-    private Integer usual;
+    private String schedule;
+
+    private Integer capacity;
+
+    private Integer remain;
 
     private Integer level;
 
-    private Integer evaluation;
-
     private Integer status;
+
+    private String info;
 
     private Date createTime;
 
