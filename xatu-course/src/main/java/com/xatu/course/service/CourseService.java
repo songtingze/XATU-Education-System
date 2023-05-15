@@ -3,6 +3,8 @@ package com.xatu.course.service;
 import com.xatu.common.domain.PageQuery;
 import com.xatu.common.domain.PageResult;
 import com.xatu.common.domain.Result;
+import com.xatu.course.domain.Student;
+import com.xatu.course.domain.vo.ScheduleCeilVO;
 import com.xatu.course.domain.vo.SelectCourseVO;
 
 import java.util.List;
@@ -33,4 +35,14 @@ public interface CourseService {
      * 获取已选课程
      */
     PageResult<SelectCourseVO> listSelectedCourse(Integer studentNumber);
+
+    /**
+     * 获取课程表
+     */
+    Result<List<Map<String, ScheduleCeilVO>>> getSchedule(Integer studentNumber);
+
+    /**
+     * 获取某节课的选课学生名单
+     */
+    PageResult<Student> getStudentList(String courseNum, Integer courseIndex);
 }

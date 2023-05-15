@@ -3,6 +3,8 @@ package com.xatu.course.controller;
 import com.xatu.common.domain.PageQuery;
 import com.xatu.common.domain.PageResult;
 import com.xatu.common.domain.Result;
+import com.xatu.course.domain.Student;
+import com.xatu.course.domain.vo.ScheduleCeilVO;
 import com.xatu.course.domain.vo.SelectCourseVO;
 import com.xatu.course.service.CourseService;
 import org.springframework.web.bind.annotation.*;
@@ -60,6 +62,22 @@ public class CourseController {
     public Result<Map<String, List<SelectCourseVO>>> listConflictingCourse(@RequestParam Integer studentNumber) {
 //        Integer studentNumber = 18301077;
         return courseService.listConflictingCourse(studentNumber);
+    }
+
+    /**
+     * 获取课程表
+     */
+    @GetMapping("/schedule/get")
+    public Result<List<Map<String, ScheduleCeilVO>>> getSchedule(@RequestParam Integer studentNumber) {
+        return courseService.getSchedule(studentNumber);
+    }
+
+    /**
+     * 获取选了该课程的学生名单
+     */
+    @GetMapping("/student/list")
+    public PageResult<Student> getCourseStudentList(@RequestParam String courseNum, @RequestParam Integer courseIndex) {
+        return courseService.getStudentList(courseNum, courseIndex);
     }
 
 }

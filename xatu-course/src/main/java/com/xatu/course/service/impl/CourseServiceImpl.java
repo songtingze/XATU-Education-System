@@ -1,7 +1,7 @@
 package com.xatu.course.service.impl;
 
-import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -12,6 +12,7 @@ import com.xatu.common.domain.Result;
 import com.xatu.course.domain.SelectCourse;
 import com.xatu.course.domain.SingleCourse;
 import com.xatu.course.domain.Student;
+import com.xatu.course.domain.vo.ScheduleCeilVO;
 import com.xatu.course.domain.vo.SelectCourseVO;
 import com.xatu.course.domain.vo.SingleCourseVO;
 import com.xatu.course.mapper.SelectCourseMapper;
@@ -137,5 +138,43 @@ public class CourseServiceImpl implements CourseService {
             return dst;
         }).collect(Collectors.toList());
         return PageResult.success(result);
+    }
+
+    @Override
+    public Result<List<Map<String, ScheduleCeilVO>>> getSchedule(Integer studentNumber) {
+        // TODO 冲突课程只会显示一个
+        List<Map<String, ScheduleCeilVO>> scheduleTable = new ArrayList<>();
+        // 每天划分为7个时间段
+        Map<String, Integer> timeToIndex = new HashMap<>();
+        timeToIndex.put("1", 0);
+        timeToIndex.put("2", 1);
+        timeToIndex.put("3", 2);
+        timeToIndex.put("4", 3);
+        timeToIndex.put("5", 4);
+        timeToIndex.put("6", 5);
+        timeToIndex.put("7", 6);
+
+        for (int i = 0; i < 7; i++) {
+            scheduleTable.add(new HashMap<>());
+        }
+        List<SingleCourseVO> listResult = singleCourseMapper.selectSelectedByStudentNumber(studentNumber);
+        // 遍历每一节课，放到对应位置
+        for (SingleCourseVO course : listResult) {
+            JSONObject schedule = JSONUtil.parseObj(course.getSchedule());
+            String[] time = schedule.getStr("time").split(",");
+            String dayOfWeek = time[0], duration = time[1];
+
+            ScheduleCeilVO scheduleCeil = new ScheduleCeilVO();
+            BeanUtils.copyProperties(course, scheduleCeil);
+            scheduleCeil.setLocation(schedule.getStr("location"));
+            scheduleTable.get(timeToIndex.get(duration)).put(dayOfWeek, scheduleCeil);
+        }
+        return Result.success(scheduleTable);
+    }
+
+    @Override
+    public PageResult<Student> getStudentList(String courseNum, Integer courseIndex) {
+        List<Student> listResult = studentMapper.listByCourse(courseNum, courseIndex);
+        return PageResult.success(listResult);
     }
 }
