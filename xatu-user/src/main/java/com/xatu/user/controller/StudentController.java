@@ -6,10 +6,7 @@ import com.xatu.common.domain.Result;
 import com.xatu.user.domain.Student;
 import com.xatu.user.domain.vo.StudentVo;
 import com.xatu.user.service.StudentService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -40,6 +37,7 @@ public class StudentController {
 
     @PostMapping("/logout")
     public Result logoutController(@RequestParam int id) {
+//        StpUtil.checkLogin();
         StpUtil.logout(id);
         System.out.println("当前是否处于登录状态：" + StpUtil.isLogin());
         //获取当前会话账号id, 如果未登录，则返回null
@@ -47,5 +45,17 @@ public class StudentController {
         return Result.success();
     }
 
+    @PostMapping("/changePhoto")
+    public Result<Student> changePhotoController(@RequestBody Student student) {
+        //判断是否登录
+        StpUtil.checkLogin();
+        Student stu = studentService.changePhoto(student.getId(), student.getPhotoUrl());
+        if (stu != null) {
+            return Result.success(student,"照片修改成功！");
+        }
+        else {
+            return Result.error(CodeConstants.ERROR, "照片修改错误！");
+        }
+    }
 
 }

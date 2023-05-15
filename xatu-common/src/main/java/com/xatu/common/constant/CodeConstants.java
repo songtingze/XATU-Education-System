@@ -17,4 +17,8 @@ public class CodeConstants {
      * 登录错误
      */
     public static final String LOGIN_ERROR = "1001";
+    /**
+     * StpUtil抛出的异常处理
+     */
+    public static final String SATOKEN_ERROR = "1002";
 }
