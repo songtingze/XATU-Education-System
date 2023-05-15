@@ -7,6 +7,7 @@ import com.xatu.user.service.StudentService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * @author Wang Lei
@@ -23,6 +24,20 @@ public class StudentServiceImpl implements StudentService {
         Student student = studentMapper.selectOne(wrapper);
         // 重要信息置空
         if (student != null) {
+            student.setPassword("");
+        }
+        return student;
+    }
+
+    @Override
+    public Student changePhoto(int id, String photoUrl) {
+        LambdaQueryWrapper<Student> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Student::getId, id);
+        Student student = studentMapper.selectOne(wrapper);
+        if (student != null) {
+            student.setPhotoUrl(photoUrl);
+            student.setUpdateTime(new Date());
+            studentMapper.updateById(student);
             student.setPassword("");
         }
         return student;
