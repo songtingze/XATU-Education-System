@@ -1,5 +1,6 @@
 package com.xatu.user.controller;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
 import com.xatu.common.constant.CodeConstants;
 import com.xatu.common.domain.Result;
@@ -19,6 +20,7 @@ public class StudentController {
     @Resource
     StudentService studentService;
 
+    @SaIgnore //忽略鉴权校验
     @PostMapping("/login")
     public Result<Student> loginController(@RequestParam String number, @RequestParam String password) {
         Student student = studentService.login(number, password);
@@ -37,7 +39,7 @@ public class StudentController {
 
     @PostMapping("/logout")
     public Result logoutController(@RequestParam int id) {
-//        StpUtil.checkLogin();
+        StpUtil.checkLogin();
         StpUtil.logout(id);
         System.out.println("当前是否处于登录状态：" + StpUtil.isLogin());
         //获取当前会话账号id, 如果未登录，则返回null
