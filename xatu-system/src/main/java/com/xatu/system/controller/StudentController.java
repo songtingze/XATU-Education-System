@@ -8,8 +8,11 @@ import com.xatu.system.domain.Student;
 import com.xatu.system.domain.vo.StudentVo;
 import com.xatu.system.service.StudentService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Wang Lei
@@ -20,48 +23,29 @@ public class StudentController {
     @Resource
     StudentService studentService;
 
-//    @GetMapping("/getStudentList")
-//    public PageResult<StudentVo> getStudentList(@PathVariable("page") Integer page,@PathVariable("size") Integer size){
-//
-//    }
-
-    @PostMapping("/login")
-    public Result<Student> loginController(@RequestParam String number, @RequestParam String password) {
-        Student student = studentService.login(number, password);
-        if (student != null) {
+    @GetMapping("/getStudentList")
+    public PageResult<StudentVo> getStudentList(@RequestParam Integer current,@RequestParam Integer size){
+        PageResult<Student> pageResult = studentService.getStudentList(new Student(),current,size);
+        List<Student> studentList = pageResult.getData();
+        List<StudentVo> studentVos = new ArrayList<>();
+        for(Student student:studentList){
             StudentVo studentVo = new StudentVo(student);
-            System.out.println("登录成功");
-            //用student表中的id登录
-            StpUtil.login(studentVo.getId());
-            studentVo.setUserToken(StpUtil.getTokenValue());
-            return Result.success(studentVo, "登录成功！");
-        } else {
-            System.out.println("账号密码错误");
-            return Result.error(CodeConstants.LOGIN_ERROR, "账号或密码错误！");
+            studentVos.add(studentVo);
         }
-    }
+        return PageResult.success(studentVos,pageResult.getTotal(),pageResult.getCurrent());
 
-    @PostMapping("/logout")
-    public Result logoutController(@RequestParam int id) {
-//        StpUtil.checkLogin();
-        StpUtil.logout(id);
-        System.out.println("当前是否处于登录状态：" + StpUtil.isLogin());
-        //获取当前会话账号id, 如果未登录，则返回null
-        System.out.println("当前会话账号id：" + StpUtil.getLoginIdDefaultNull());
-        return Result.success();
     }
-
-    @PostMapping("/changePhoto")
-    public Result<Student> changePhotoController(@RequestBody Student student) {
-        //判断是否登录
-        StpUtil.checkLogin();
-        Student stu = studentService.changePhoto(student.getId(), student.getPhotoUrl());
-        if (stu != null) {
-            return Result.success(student,"照片修改成功！");
+    @PostMapping("/import")
+    public boolean exImport(@RequestParam("file") MultipartFile file){
+        boolean isSuccess = false;
+        String fileName = file.getOriginalFilename();
+        System.out.println(fileName);
+        try {
+            isSuccess = studentService.batchImport(fileName,file);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        else {
-            return Result.error(CodeConstants.ERROR, "照片修改错误！");
-        }
+        System.out.println(isSuccess);
+        return isSuccess;
     }
-
 }
