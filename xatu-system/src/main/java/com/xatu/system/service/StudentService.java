@@ -1,24 +1,27 @@
 package com.xatu.system.service;
 
+import com.xatu.common.domain.PageResult;
 import com.xatu.system.domain.Student;
+import com.xatu.system.domain.vo.StudentVo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author Wang Lei
  */
 public interface StudentService {
     /**
-     * 登录功能
-     * @param number 学生学号
-     * @param password 密码
-     * @return 返回该学生对象
+     *
+     * @param student
+     * @return
      */
-    Student login (String number, String password);
+    PageResult<Student> getStudentList(Student student,int current,int size);
 
     /**
-     * 更改学生照片
-     * @param id 学生id
-     * @param photoUrl 该学生的照片url
-     * @return 返回该学生实体对象
+     *
+     * @param fileName
+     * @param file
+     * @return
+     * @throws Exception
      */
-    Student changePhoto(int id, String photoUrl);
+    public boolean batchImport(String fileName, MultipartFile file) throws Exception;//导入Excel
 }
