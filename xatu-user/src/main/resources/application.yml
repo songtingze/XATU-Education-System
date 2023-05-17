@@ -4,7 +4,7 @@ eureka:
     register-with-eureka: true #表明将自己注册进EurekaServer
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8901/eureka/
+      defaultZone: http://${eureka_host:localhost}:8901/eureka/
     instance:
       instance-id: xatu-user #注册的服务名称
 
