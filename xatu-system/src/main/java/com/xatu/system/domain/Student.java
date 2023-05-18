@@ -19,9 +19,13 @@ public class Student {
     private String number;
     private String password;
     private String school;
+    private String classNumber;
     @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
     private Date enrollmentTime;
-    private int age;
+    private String sex;
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+    private Date birth;
+    private String nation;
     private String household;
     @JsonFormat(pattern = "yyyy-MM-dd HH:MM:ss",timezone = "GMT+8")
     private Date createTime;

@@ -91,37 +91,51 @@ public class StudentServiceImpl implements StudentService {
             if(school == null || school.isEmpty()){
                 throw new Exception("导入失败(第\"+(r+1)+\"行，学院未填写)");
             }
-//            row.getCell(4).setCellType(CellType.STRING);//将每一行第一个单元格设置为字符串类型
-//            String enrollmentTime =row.getCell(4).getStringCellValue();
-//            if(enrollmentTime == null || enrollmentTime.isEmpty()){
-//                throw new Exception("导入失败(第\"+(r+1)+\"行，入学时间未填写)");
-//            }
+            row.getCell(4).setCellType(CellType.STRING);//将每一行第一个单元格设置为字符串类型
+            String classNumber =row.getCell(4).getStringCellValue();
+            if(classNumber == null || classNumber.isEmpty()){
+                throw new Exception("导入失败(第\"+(r+1)+\"行，班级未填写)");
+            }
             row.getCell(5).setCellType(CellType.STRING);//将每一行第一个单元格设置为字符串类型
-            String age =row.getCell(5).getStringCellValue();
-            if(age == null || age.isEmpty()){
-                throw new Exception("导入失败(第\"+(r+1)+\"行，年龄未填写)");
+            String sex =row.getCell(5).getStringCellValue();
+            if(sex == null || sex.isEmpty()){
+                throw new Exception("导入失败(第\"+(r+1)+\"行，性别未填写)");
             }
             row.getCell(6).setCellType(CellType.STRING);//将每一行第一个单元格设置为字符串类型
-            String household =row.getCell(6).getStringCellValue();
+            String birth =row.getCell(6).getStringCellValue();
+            if(birth == null || birth.isEmpty()){
+                throw new Exception("导入失败(第\"+(r+1)+\"行，出生日期未填写)");
+            }
+            row.getCell(7).setCellType(CellType.STRING);//将每一行第一个单元格设置为字符串类型
+            String nation =row.getCell(7).getStringCellValue();
+            if(nation == null || nation.isEmpty()){
+                throw new Exception("导入失败(第\"+(r+1)+\"行，民族未填写)");
+            }
+            row.getCell(8).setCellType(CellType.STRING);//将每一行第一个单元格设置为字符串类型
+            String household =row.getCell(8).getStringCellValue();
             if(household == null || household.isEmpty()){
                 throw new Exception("导入失败(第\"+(r+1)+\"行，籍贯未填写)");
             }
-            row.getCell(7).setCellType(CellType.STRING);//将每一行第一个单元格设置为字符串类型
-            String photoUrl =row.getCell(7).getStringCellValue();
+            row.getCell(9).setCellType(CellType.STRING);//将每一行第一个单元格设置为字符串类型
+            String photoUrl =row.getCell(9).getStringCellValue();
             if(photoUrl == null || photoUrl.isEmpty()){
                 throw new Exception("导入失败(第\"+(r+1)+\"行，证件照路径未填写)");
             }
             //完整的循环一次 就组成了一个对象
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM");
+            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMdd");
             String enrollmentTime = sdf.format(new Date())+"-09";
             student.setName(name);
             student.setNumber(number);
             student.setPassword(password);
             student.setSchool(school);
+            student.setClassNumber(classNumber);
+            student.setSex(sex);
+            student.setNation(nation);
             student.setHousehold(household);
             student.setEnrollmentTime(sdf1.parse(enrollmentTime));
-            student.setAge(Integer.parseInt(age));
+            student.setBirth(sdf2.parse(birth));
             student.setPhotoUrl(photoUrl);
             student.setCreateTime(new Date());
             student.setUpdateTime(new Date());
@@ -138,9 +152,12 @@ public class StudentServiceImpl implements StudentService {
                 studentExist.setName(newStudent.getName());
                 studentExist.setPassword(newStudent.getPassword());
                 studentExist.setSchool(newStudent.getSchool());
+                studentExist.setClassNumber(newStudent.getClassNumber());
+                studentExist.setSex(newStudent.getSex());
+                studentExist.setNation(newStudent.getNation());
                 studentExist.setHousehold(newStudent.getHousehold());
                 studentExist.setEnrollmentTime(newStudent.getEnrollmentTime());
-                studentExist.setAge(newStudent.getAge());
+                studentExist.setBirth(newStudent.getBirth());
                 studentExist.setPhotoUrl(newStudent.getPhotoUrl());
                 studentExist.setUpdateTime(new Date());
                 studentMapper.updateById(studentExist);
