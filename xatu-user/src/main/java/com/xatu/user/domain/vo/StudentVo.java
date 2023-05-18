@@ -17,8 +17,11 @@ public class StudentVo extends Student {
         this.setNumber(student.getNumber());
         this.setPassword(student.getPassword());
         this.setSchool(student.getSchool());
+        this.setClassNumber(student.getClassNumber());
         this.setEnrollmentTime(student.getEnrollmentTime());
-        this.setAge(student.getAge());
+        this.setSex(student.getSex());
+        this.setBirth(student.getBirth());
+        this.setNation(student.getNation());
         this.setHousehold(student.getHousehold());
         this.setPhotoUrl(student.getPhotoUrl());
         this.setCreateTime(student.getCreateTime());
