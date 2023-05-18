@@ -39,6 +39,7 @@
         <module>xatu-homework</module>
         <module>xatu-user</module>
         <module>xatu-system</module>
+        <module>xatu-chat</module>
     </modules>
 
     <dependencyManagement>

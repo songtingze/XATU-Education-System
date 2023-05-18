@@ -29,6 +29,10 @@ spring:
           uri: http://${evalution_host:localhost}:8908 #匹配后提供服务的路由地址
           predicates:
             - Path=/evalution/** #断言 路径相匹配的进行路由
+        - id: chat_routh #路由的id
+          uri: http://${chat_host:localhost}:8909 #匹配后提供服务的路由地址
+          predicates:
+            - Path=/chat/** #断言 路径相匹配的进行路由
 #        - id: common_routh #路由的id
 #          uri: http://localhost:8903 #匹配后提供服务的路由地址
 #          predicates:
