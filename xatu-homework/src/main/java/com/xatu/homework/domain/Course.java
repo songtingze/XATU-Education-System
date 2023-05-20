@@ -22,9 +22,7 @@ public class Course {
     private String grade;
     private String info;
     private Integer status;
-    @TableField( fill = FieldFill.INSERT)
     private Date createTime;
-    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
 }

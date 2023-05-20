@@ -13,13 +13,4 @@ class XatuHomeworkApplicationTests {
     void contextLoads() {
     }
 
-//    @Test
-//    Void testGetByPage(){
-//        HomeworkMapper homeworkMapper = null;
-//        IPage page = new Page(1,5);
-//        homeworkMapper.selectPage(page,null);
-//        System.out.println(page.getCurrent());
-//    }
-
-
 }

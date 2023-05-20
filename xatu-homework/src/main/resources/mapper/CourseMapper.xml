@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xatu.homework.mapper.CourseMapper">
+    <select id="selectCourseByStudentNumber" resultType="com.xatu.homework.domain.vo.CourseVO">
+        select c.name,sc.course_num,sc.course_index,c.school,t.name as teacher
+        from single_course sc
+                 inner join course c on c.number = sc.course_num
+                 inner join teacher t on t.number = sc.teacher
+                 inner join select_course sc2 on sc2.course = sc.course_num and sc2.course_index = sc.course_index
+        where sc2.student = #{number}
+    </select>
+
+    <select id="selectCourseByTeacherNumber" resultType="com.xatu.homework.domain.vo.CourseVO">
+        select c.name,sc.course_num,sc.course_index,c.school,t.name as teacher
+        from single_course sc
+                 inner join course c on c.number = sc.course_num
+                 inner join teacher t on t.number = sc.teacher
+        where sc.teacher = #{number}
+    </select>
+
+    <select id="selectTeacherByCourseNumber" resultType="com.xatu.homework.domain.vo.TeacherVO">
+        select t.number,t.name,t.school,t.title
+        from single_course sc
+                 inner join teacher t on t.number = sc.teacher
+        where sc.course_num = #{number} and sc.course_index = #{index}
+    </select>
+
+    <select id="getStudentList" resultType="com.xatu.homework.domain.Student">
+        select *
+        from student s
+                 inner join select_course sc on sc.student = s.number
+        where sc.course = #{number} and sc.course_index = #{index}
+    </select>
+</mapper>
