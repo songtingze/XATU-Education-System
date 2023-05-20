@@ -6,43 +6,39 @@ public enum School {
     /**
      * 软件学院
      */
-    SOFTWARE("SOFTWARE", "软件学院"),
+    SOFTWARE(0, "软件学院"),
     /**
      * 计算机学院
      */
-    COMPUTER("COMPUTER", "计算机学院");
+    COMPUTER(1, "计算机学院");
 
-    private String code;
+    private int code;
     private String desc;
 
-    School(String code, String desc) {
+    School(int code, String desc) {
         this.code = code;
         this.desc = desc;
     }
 
-    public static School getByCode(String code) {
-        if (StringUtils.isNotBlank(code)) {
-            for (School t : School.values()) {
-                if (t.getCode().equals(code)) {
-                    return t;
-                }
+    public static School getByCode(int code) {
+        for (School t : School.values()) {
+            if (t.getCode() == code) {
+                return t;
             }
         }
         return null;
     }
 
-    public static Boolean isIn(String code) {
-        if (StringUtils.isNotBlank(code)) {
-            for (School t : School.values()) {
-                if (t.getCode().equals(code)) {
-                    return true;
-                }
+    public static Boolean isIn(int code) {
+        for (School t : School.values()) {
+            if (t.getCode()==code) {
+                return true;
             }
         }
         return false;
     }
 
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 
