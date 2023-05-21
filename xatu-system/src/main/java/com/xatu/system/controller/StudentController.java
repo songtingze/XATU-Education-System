@@ -4,6 +4,8 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.xatu.common.constant.CodeConstants;
 import com.xatu.common.domain.PageResult;
 import com.xatu.common.domain.Result;
+import com.xatu.common.domain.School;
+import com.xatu.common.enums.SchoolEnum;
 import com.xatu.system.domain.Student;
 import com.xatu.system.domain.vo.StudentVo;
 import com.xatu.system.service.StudentService;
@@ -47,5 +49,13 @@ public class StudentController {
         }
         System.out.println(isSuccess);
         return isSuccess;
+    }
+    @GetMapping("/getSchools")
+    public Result<List<School>> getSchools(){
+        return Result.success(SchoolEnum.getAllSchools());
+    }
+    @PostMapping("/update")
+    public Result<Boolean> updateStudent(@RequestBody Student student){
+        return studentService.update(student);
     }
 }

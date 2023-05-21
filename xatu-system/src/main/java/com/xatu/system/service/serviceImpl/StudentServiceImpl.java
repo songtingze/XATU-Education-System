@@ -4,8 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xatu.common.domain.PageResult;
+import com.xatu.common.domain.Result;
+import com.xatu.common.enums.SchoolEnum;
 import com.xatu.system.domain.Student;
-import com.xatu.system.domain.Sys;
 import com.xatu.system.mapper.StudentMapper;
 import com.xatu.system.service.StudentService;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -87,8 +88,8 @@ public class StudentServiceImpl implements StudentService {
                 throw new Exception("导入失败(第\"+(r+1)+\"行，密码未填写)");
             }
             row.getCell(3).setCellType(CellType.STRING);//将每一行第一个单元格设置为字符串类型
-            String school =row.getCell(3).getStringCellValue();
-            if(school == null || school.isEmpty()){
+            String schoolValue =row.getCell(3).getStringCellValue();
+            if(schoolValue == null || schoolValue.isEmpty()){
                 throw new Exception("导入失败(第\"+(r+1)+\"行，学院未填写)");
             }
             row.getCell(4).setCellType(CellType.STRING);//将每一行第一个单元格设置为字符串类型
@@ -121,6 +122,7 @@ public class StudentServiceImpl implements StudentService {
             if(photoUrl == null || photoUrl.isEmpty()){
                 throw new Exception("导入失败(第\"+(r+1)+\"行，证件照路径未填写)");
             }
+            int school = SchoolEnum.getByDesc(schoolValue);
             //完整的循环一次 就组成了一个对象
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM");
@@ -149,21 +151,37 @@ public class StudentServiceImpl implements StudentService {
                 studentMapper.insert(newStudent);
                 System.out.println("==>插入："+newStudent);
             }else{
-                studentExist.setName(newStudent.getName());
-                studentExist.setPassword(newStudent.getPassword());
-                studentExist.setSchool(newStudent.getSchool());
-                studentExist.setClassNumber(newStudent.getClassNumber());
-                studentExist.setSex(newStudent.getSex());
-                studentExist.setNation(newStudent.getNation());
-                studentExist.setHousehold(newStudent.getHousehold());
-                studentExist.setEnrollmentTime(newStudent.getEnrollmentTime());
-                studentExist.setBirth(newStudent.getBirth());
-                studentExist.setPhotoUrl(newStudent.getPhotoUrl());
-                studentExist.setUpdateTime(new Date());
-                studentMapper.updateById(studentExist);
+                studentMapper.updateById(coverStudent(studentExist,newStudent));
                 System.out.println("==>更新："+studentExist);
             }
         }
         return notnull;
+    }
+
+    public Student coverStudent(Student studentExist,Student newStudent){
+        studentExist.setName(newStudent.getName());
+        studentExist.setPassword(newStudent.getPassword());
+        studentExist.setSchool(newStudent.getSchool());
+        studentExist.setClassNumber(newStudent.getClassNumber());
+        studentExist.setSex(newStudent.getSex());
+        studentExist.setNation(newStudent.getNation());
+        studentExist.setHousehold(newStudent.getHousehold());
+        studentExist.setEnrollmentTime(newStudent.getEnrollmentTime());
+        studentExist.setBirth(newStudent.getBirth());
+        studentExist.setPhotoUrl(newStudent.getPhotoUrl());
+        studentExist.setUpdateTime(new Date());
+        return studentExist;
+    }
+
+    @Override
+    public Result<Boolean> update(Student newStudent) {
+//        if(!Regex.judgeClassNumber(newStudent.getClassNumber())){
+//            return Result.error(CodeConstants.INPUT_FORMAT_ERROR,"班级输入格式错误，正确格式为：本2203/硕2203");
+//        }
+        LambdaQueryWrapper<Student> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Student::getNumber, newStudent.getNumber());
+        Student studentExist = studentMapper.selectOne(wrapper);
+        studentMapper.updateById(coverStudent(studentExist,newStudent));
+        return Result.success();
     }
 }
