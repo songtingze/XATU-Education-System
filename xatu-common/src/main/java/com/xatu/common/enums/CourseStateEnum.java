@@ -1,27 +1,25 @@
 package com.xatu.common.enums;
 
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-
-public enum School {
+public enum CourseStateEnum {
     /**
-     * 软件学院
+     * 选课进行中
      */
-    SOFTWARE(0, "软件学院"),
+    SELECTING(0, "选课进行中"),
     /**
-     * 计算机学院
+     * 初始状态
      */
-    COMPUTER(1, "计算机学院");
+    INIT(1, "初始状态");
 
     private int code;
     private String desc;
 
-    School(int code, String desc) {
+    CourseStateEnum(int code, String desc) {
         this.code = code;
         this.desc = desc;
     }
 
-    public static School getByCode(int code) {
-        for (School t : School.values()) {
+    public static SchoolEnum getByCode(int code) {
+        for (SchoolEnum t : SchoolEnum.values()) {
             if (t.getCode() == code) {
                 return t;
             }
@@ -30,7 +28,7 @@ public enum School {
     }
 
     public static Boolean isIn(int code) {
-        for (School t : School.values()) {
+        for (SchoolEnum t : SchoolEnum.values()) {
             if (t.getCode()==code) {
                 return true;
             }

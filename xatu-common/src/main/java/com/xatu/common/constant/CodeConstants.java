@@ -21,4 +21,8 @@ public class CodeConstants {
      * StpUtil抛出的异常处理
      */
     public static final String SATOKEN_ERROR = "1002";
+    /**
+     * 输入格式错误
+     */
+    public static final String INPUT_FORMAT_ERROR = "1003";
 }

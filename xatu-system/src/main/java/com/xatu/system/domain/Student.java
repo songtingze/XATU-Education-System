@@ -18,7 +18,7 @@ public class Student {
     private String name;
     private String number;
     private String password;
-    private String school;
+    private int school;
     private String classNumber;
     @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
     private Date enrollmentTime;
