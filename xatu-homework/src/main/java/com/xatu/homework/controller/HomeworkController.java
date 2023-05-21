@@ -3,14 +3,17 @@ package com.xatu.homework.controller;
 import com.xatu.common.domain.PageResult;
 import com.xatu.common.domain.Result;
 import com.xatu.homework.domain.Course;
-import com.xatu.homework.domain.Homework;
+import com.xatu.homework.domain.Attachment;
 import com.xatu.homework.domain.Student;
 import com.xatu.homework.domain.vo.CourseVO;
 import com.xatu.homework.domain.vo.TeacherVO;
 import org.springframework.web.bind.annotation.*;
 import com.xatu.homework.service.HomeworkService;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("")
@@ -86,6 +89,29 @@ public class HomeworkController {
     }
 
     /**
+     * 上传附件
+     */
+    @PostMapping("/homework/upload")
+    public Result upload(@RequestParam MultipartFile file) throws IOException {
+//        System.out.println("upload--file is"+file);
+        return homeworkService.upload(file);
+    }
+    /**
+     * 下载附件
+     */
+    @GetMapping("/homework/download")
+    public Result downloadFile(HttpServletResponse response, @RequestParam String fileIndex,@RequestParam String fileName) throws IOException {
+        // 清空输出流
+        response.reset();
+        response.setContentType("application/x-download;charset=UTF-8");
+//        response.setHeader("Content-Disposition", "attachment;fileIndex="+ new String(fileIndex.getBytes("utf-8"), "utf-8"));
+        response.setHeader("Content-Disposition", "attachment;filename="+fileName);
+        return homeworkService.download(response.getOutputStream(),fileIndex);
+    }
+
+
+
+    /**
      * 添加课程作业
      */
 //    @PostMapping("/homework/tec/insert")
@@ -141,6 +167,8 @@ public class HomeworkController {
 //    public PageResult<Homework> getStudentHomeworkCourseList() {
 //
 //    }
+
+
 
 
 }
