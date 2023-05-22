@@ -18,11 +18,14 @@ public class Student {
     private String number;
     private String password;
     private String school;
+    private String classNumber;
     private Date enrollmentTime;
-    private int age;
+    private String sex;
+    private Date birth;
+    private String nation;
+    private String photoUrl;
     private String household;
     private Date createTime;
     private Date updateTime;
-    private String photoUrl;
 
 }
