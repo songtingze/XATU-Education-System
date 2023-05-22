@@ -23,10 +23,12 @@ public class SaTokenConfigure {
                 .addInclude("/**")
                 // 开放地址
                 .addExclude("/favicon.ico")
+                .addExclude("/sys/login")
+                .addExclude("/user/teacher/login")
                 // 鉴权方法：每次访问进入
                 .setAuth(obj -> {
                     // 登录校验 -- 拦截所有路由，并排除/user/doLogin 用于开放登录
-                    SaRouter.match("/**", "/user/stu/login", r -> StpUtil.checkLogin()).notMatch("sys/login").notMatch("/user/tea/login");
+                    SaRouter.match("/**", "/user/stu/login", r -> StpUtil.checkLogin());
                     // 权限认证 -- 不同模块, 校验不同权限
 //                    SaRouter.match("/user/**", r -> StpUtil.checkPermission("user"));
                 })
