@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,7 +38,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public PageResult<Student> getStudentList(StudentVo studentVo) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         LambdaQueryWrapper<Student> wrapper = new LambdaQueryWrapper<>();
         IPage page = new Page(studentVo.getCurrent(),studentVo.getSize());
         if(studentVo.getId() != 0) wrapper.eq(Student::getId, studentVo.getId());
@@ -211,18 +212,20 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Result<Boolean> add(Student newStudent) {
+    public Result<Boolean> add(Student newStudent) throws ParseException {
         LambdaQueryWrapper<Student> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Student::getNumber, newStudent.getNumber());
         Student studentExist = studentMapper.selectOne(wrapper);
         if(studentExist != null){
             return Result.error(CodeConstants.INSERT_DUPLICATE_ERROR,"该学号已存在");
         }
-
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
         long time = newStudent.getEnrollmentTime().getTime() + 1000*60*60*24;
         Date enrollmentTime = new Date();
         enrollmentTime.setTime(time);
-        newStudent.setEnrollmentTime(enrollmentTime);
+        String enroll = sdf.format(enrollmentTime)+"-09-01";
+        newStudent.setEnrollmentTime(sdf1.parse(enroll));
 
         long time1 = newStudent.getBirth().getTime() + 1000*60*60*24;
         Date birth = new Date();

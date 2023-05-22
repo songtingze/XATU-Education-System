@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,8 +61,8 @@ public class StudentController {
         return studentService.update(student);
     }
     @PostMapping("/add")
-    public Result<Boolean> addStudent (@RequestBody Student student){
-        return studentService.add(student);
+    public Result<Boolean> addStudent (@RequestBody Student student) throws ParseException {
+        return studentService.add(student) ;
     }
     @DeleteMapping("/delete")
     public Result<Boolean> deleteStudent(@RequestParam Integer id){

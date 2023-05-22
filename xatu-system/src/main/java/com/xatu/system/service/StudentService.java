@@ -6,6 +6,8 @@ import com.xatu.system.domain.Student;
 import com.xatu.system.domain.vo.StudentVo;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.text.ParseException;
+
 /**
  * @author Wang Lei
  */
@@ -38,7 +40,7 @@ public interface StudentService {
      * @param newStudent
      * @return
      */
-    public Result<Boolean> add(Student newStudent);
+    public Result<Boolean> add(Student newStudent) throws ParseException;
 
     /**
      *
