@@ -25,4 +25,8 @@ public class CodeConstants {
      * 输入格式错误
      */
     public static final String INPUT_FORMAT_ERROR = "1003";
+    /**
+     * 插入重复错误
+     */
+    public static final String INSERT_DUPLICATE_ERROR = "1004";
 }

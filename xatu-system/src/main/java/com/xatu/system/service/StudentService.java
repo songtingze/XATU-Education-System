@@ -12,10 +12,10 @@ import org.springframework.web.multipart.MultipartFile;
 public interface StudentService {
     /**
      *
-     * @param student
+     * @param studentVo
      * @return
      */
-    PageResult<Student> getStudentList(Student student,int current,int size);
+    PageResult<Student> getStudentList(StudentVo studentVo);
 
     /**
      *
@@ -32,4 +32,25 @@ public interface StudentService {
      * @return
      */
     public Result<Boolean> update(Student newStudent);
+
+    /**
+     *
+     * @param newStudent
+     * @return
+     */
+    public Result<Boolean> add(Student newStudent);
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public Result<Boolean> delete(int id);
+
+    /**
+     *
+     * @param sid
+     * @return
+     */
+    public Result<Boolean> batchDelete(String sid);
 }

@@ -3,10 +3,12 @@ package com.xatu.system.service.serviceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xatu.common.constant.CodeConstants;
 import com.xatu.common.domain.PageResult;
 import com.xatu.common.domain.Result;
 import com.xatu.common.enums.SchoolEnum;
 import com.xatu.system.domain.Student;
+import com.xatu.system.domain.vo.StudentVo;
 import com.xatu.system.mapper.StudentMapper;
 import com.xatu.system.service.StudentService;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -34,9 +36,32 @@ public class StudentServiceImpl implements StudentService {
     private StudentMapper studentMapper;
 
     @Override
-    public PageResult<Student> getStudentList(Student student,int current,int size) {
+    public PageResult<Student> getStudentList(StudentVo studentVo) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         LambdaQueryWrapper<Student> wrapper = new LambdaQueryWrapper<>();
-        IPage page = new Page(current,size);
+        IPage page = new Page(studentVo.getCurrent(),studentVo.getSize());
+        if(studentVo.getId() != 0) wrapper.eq(Student::getId, studentVo.getId());
+        if(studentVo.getName() != null && !studentVo.getName().equalsIgnoreCase("")) wrapper.like(Student::getName, studentVo.getName());
+        if(studentVo.getNumber() != null && !studentVo.getNumber().equalsIgnoreCase("")) wrapper.like(Student::getNumber, studentVo.getNumber());
+        if(studentVo.getSchool() != 0) wrapper.eq(Student::getSchool, studentVo.getSchool());
+        if(studentVo.getClassNumber() != null && !studentVo.getClassNumber().equalsIgnoreCase("")) wrapper.like(Student::getClassNumber, studentVo.getClassNumber());
+        if(studentVo.getEnrollmentTime() != null) {
+            long time = studentVo.getEnrollmentTime().getTime() + 1000*60*60*24;
+            Date date = new Date();
+            date.setTime(time);
+            String enrollmentTime = sdf.format(date);
+            wrapper.like(Student::getEnrollmentTime, enrollmentTime);
+        }
+        if(studentVo.getSex() != null && !studentVo.getSex().equalsIgnoreCase("")) wrapper.eq(Student::getSex, studentVo.getSex());
+        if(studentVo.getBirth() != null) {
+            long time = studentVo.getBirth().getTime() + 1000*60*60*24;
+            Date date = new Date();
+            date.setTime(time);
+            String birth = sdf.format(date);
+            wrapper.eq(Student::getBirth, birth);
+        }
+        if(studentVo.getNation() != null && !studentVo.getNation().equalsIgnoreCase("")) wrapper.eq(Student::getNation, studentVo.getNation());
+        if(studentVo.getHousehold() != null && !studentVo.getHousehold().equalsIgnoreCase("")) wrapper.eq(Student::getHousehold, studentVo.getHousehold());
         studentMapper.selectPage(page,wrapper);
         return PageResult.success(page);
     }
@@ -182,6 +207,47 @@ public class StudentServiceImpl implements StudentService {
         wrapper.eq(Student::getNumber, newStudent.getNumber());
         Student studentExist = studentMapper.selectOne(wrapper);
         studentMapper.updateById(coverStudent(studentExist,newStudent));
+        return Result.success();
+    }
+
+    @Override
+    public Result<Boolean> add(Student newStudent) {
+        LambdaQueryWrapper<Student> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Student::getNumber, newStudent.getNumber());
+        Student studentExist = studentMapper.selectOne(wrapper);
+        if(studentExist != null){
+            return Result.error(CodeConstants.INSERT_DUPLICATE_ERROR,"该学号已存在");
+        }
+
+        long time = newStudent.getEnrollmentTime().getTime() + 1000*60*60*24;
+        Date enrollmentTime = new Date();
+        enrollmentTime.setTime(time);
+        newStudent.setEnrollmentTime(enrollmentTime);
+
+        long time1 = newStudent.getBirth().getTime() + 1000*60*60*24;
+        Date birth = new Date();
+        birth.setTime(time1);
+        newStudent.setBirth(birth);
+
+        newStudent.setPassword(newStudent.getNumber());
+        newStudent.setCreateTime(new Date());
+        newStudent.setUpdateTime(new Date());
+        studentMapper.insert(newStudent);
+        return Result.success();
+    }
+
+    @Override
+    public Result<Boolean> delete(int id) {
+        studentMapper.deleteById(id);
+        return Result.success();
+    }
+
+    @Override
+    public Result<Boolean> batchDelete(String sid) {
+        String[] ids = sid.split(",");
+        for(String id:ids){
+            studentMapper.deleteById(Integer.parseInt(id));
+        }
         return Result.success();
     }
 }
