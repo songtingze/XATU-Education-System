@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,9 +26,9 @@ public class StudentController {
     @Resource
     StudentService studentService;
 
-    @GetMapping("/getStudentList")
-    public PageResult<StudentVo> getStudentList(@RequestParam Integer current,@RequestParam Integer size){
-        PageResult<Student> pageResult = studentService.getStudentList(new Student(),current,size);
+    @PostMapping("/getStudentList")
+    public PageResult<StudentVo> getStudentList(@RequestBody StudentVo searchInfo){
+        PageResult<Student> pageResult = studentService.getStudentList(searchInfo);
         List<Student> studentList = pageResult.getData();
         List<StudentVo> studentVos = new ArrayList<>();
         for(Student student:studentList){
@@ -54,8 +55,20 @@ public class StudentController {
     public Result<List<School>> getSchools(){
         return Result.success(SchoolEnum.getAllSchools());
     }
-    @PostMapping("/update")
+    @PutMapping ("/update")
     public Result<Boolean> updateStudent(@RequestBody Student student){
         return studentService.update(student);
+    }
+    @PostMapping("/add")
+    public Result<Boolean> addStudent (@RequestBody Student student){
+        return studentService.add(student);
+    }
+    @DeleteMapping("/delete")
+    public Result<Boolean> deleteStudent(@RequestParam Integer id){
+        return studentService.delete(id);
+    }
+    @DeleteMapping("/batchDelete")
+    public Result<Boolean> batchDeleteStudent(@RequestParam String sid){
+        return studentService.batchDelete(sid);
     }
 }

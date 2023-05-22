@@ -12,6 +12,8 @@ import lombok.Data;
 public class StudentVo extends Student {
     private String userToken;
     private String schoolValue;
+    private int current;
+    private int size;
 
     public StudentVo (Student student) {
         this.setId(student.getId());
@@ -28,5 +30,8 @@ public class StudentVo extends Student {
         this.setPhotoUrl(student.getPhotoUrl());
         this.setCreateTime(student.getCreateTime());
         this.setUpdateTime(student.getUpdateTime());
+    }
+    public StudentVo(){
+
     }
 }
