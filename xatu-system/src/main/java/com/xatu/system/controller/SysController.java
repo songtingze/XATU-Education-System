@@ -32,4 +32,13 @@ public class SysController {
             return Result.error(CodeConstants.LOGIN_ERROR, "账号或密码错误！");
         }
     }
+    @PostMapping("/logout")
+    public Result logoutController(@RequestParam int id) {
+        StpUtil.checkLogin();
+        StpUtil.logout(id);
+        System.out.println("当前是否处于登录状态：" + StpUtil.isLogin());
+        //获取当前会话账号id, 如果未登录，则返回null
+        System.out.println("当前会话账号id：" + StpUtil.getLoginIdDefaultNull());
+        return Result.success();
+    }
 }
