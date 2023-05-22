@@ -1,23 +1,21 @@
-package com.xatu.user.config;
+package com.xatu.gateway.saToken;
 
 import cn.dev33.satoken.exception.NotLoginException;
-import com.xatu.common.constant.CodeConstants;
-import com.xatu.common.domain.Result;
+import com.alibaba.fastjson.JSON;
+import com.xatu.gateway.constant.CodeConstants;
+import com.xatu.gateway.domain.Result;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 
 /**
  * @author Wang Lei
  */
-
-@RestControllerAdvice
-public class NotLoginExceptionHandler {
-
+public class GlobalException {
     /**
      * 全局异常拦截（拦截项目中的NotLoginException异常）
      */
     @ExceptionHandler(NotLoginException.class)
-    public Result handlerNotLoginException(NotLoginException nle) throws Exception {
+    public static String handlerNotLoginException(NotLoginException nle) throws Exception {
 
         // 打印堆栈，以供调试
         nle.printStackTrace();
@@ -44,6 +42,6 @@ public class NotLoginExceptionHandler {
         }
 
         // 返回给前端
-        return Result.error(CodeConstants.SATOKEN_ERROR, message);
+        return JSON.toJSONString(Result.error(CodeConstants.SATOKEN_ERROR, message));
     }
 }

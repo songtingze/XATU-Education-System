@@ -26,7 +26,6 @@ public class StudentController {
         Student student = studentService.login(number, password);
         if (student != null) {
             StudentVo studentVo = new StudentVo(student);
-            System.out.println("登录成功");
             //用student表中的id登录
             StpUtil.login(studentVo.getId());
             studentVo.setUserToken(StpUtil.getTokenValue());
@@ -39,7 +38,6 @@ public class StudentController {
 
     @PostMapping("/logout")
     public Result logoutController(@RequestParam int id) {
-        StpUtil.checkLogin();
         StpUtil.logout(id);
         System.out.println("当前是否处于登录状态：" + StpUtil.isLogin());
         //获取当前会话账号id, 如果未登录，则返回null
@@ -47,13 +45,11 @@ public class StudentController {
         return Result.success();
     }
 
-    @PostMapping("/changePhoto")
-    public Result<Student> changePhotoController(@RequestBody Student student) {
-        //判断是否登录
-        StpUtil.checkLogin();
-        Student stu = studentService.changePhoto(student.getId(), student.getPhotoUrl());
+    @RequestMapping("/changePhoto")
+    public Result<Student> changePhotoController(@RequestParam int id, @RequestParam String photoUrl) {
+        Student stu = studentService.changePhoto(id, photoUrl);
         if (stu != null) {
-            return Result.success(student,"照片修改成功！");
+            return Result.success(stu,"照片修改成功！");
         }
         else {
             return Result.error(CodeConstants.ERROR, "照片修改错误！");

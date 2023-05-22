@@ -24,9 +24,9 @@ public class Student {
     private String sex;
     private Date birth;
     private String nation;
+    private String photoUrl;
     private String household;
     private Date createTime;
     private Date updateTime;
-    private String photoUrl;
 
 }
