@@ -1,5 +1,6 @@
 package com.xatu.system.controller;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
 import com.xatu.common.constant.CodeConstants;
 import com.xatu.common.domain.Result;
@@ -19,6 +20,7 @@ public class SysController {
     @Resource
     private SysService sysService;
 
+    @SaIgnore //忽略鉴权校验
     @PostMapping("/login")
     public Result<Sys> loginController(@RequestParam Integer number, @RequestParam String password) {
         Sys sys = sysService.loginService(number, password);
