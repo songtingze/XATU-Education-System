@@ -11,20 +11,19 @@ import java.util.Date;
  */
 
 @Data
-public class Student {
+public class Teacher {
     @TableId(type = IdType.AUTO)
     private int id;
     private String name;
     private String number;
     private String password;
     private String school;
-    private String classNumber;
-    private Date enrollmentTime;
+    private String title;
+    private Date entryTime;
     private String sex;
     private Date birth;
     private String nation;
     private String photoUrl;
-    private String household;
     private Date createTime;
     private Date updateTime;
 
