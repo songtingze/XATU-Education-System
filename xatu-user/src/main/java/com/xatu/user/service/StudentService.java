@@ -21,4 +21,13 @@ public interface StudentService {
      * @return 返回该学生实体对象
      */
     Student changePhoto(int id, String photoUrl);
+
+    /**
+     * 修改密码
+     * @param id 学生id
+     * @param oldPwd 旧密码
+     * @param newPwd 新密码
+     * @return boolean
+     */
+    boolean changePassword(int id, String oldPwd, String newPwd);
 }

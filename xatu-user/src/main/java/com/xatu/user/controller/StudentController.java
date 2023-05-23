@@ -56,4 +56,15 @@ public class StudentController {
         }
     }
 
+    @RequestMapping("/changePassword")
+    public Result changePwdController(@RequestParam int id, @RequestParam String oldPwd, @RequestParam String newPwd) {
+        boolean flag = studentService.changePassword(id, oldPwd, newPwd);
+        if (flag) {
+            return Result.success("密码修改成功！");
+        }
+        else{
+            return Result.error(CodeConstants.ERROR, "密码修改失败！");
+        }
+    }
+
 }

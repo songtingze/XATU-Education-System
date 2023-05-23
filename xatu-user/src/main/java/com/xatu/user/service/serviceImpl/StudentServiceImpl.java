@@ -42,4 +42,23 @@ public class StudentServiceImpl implements StudentService {
         }
         return student;
     }
+
+    @Override
+    public boolean changePassword(int id, String oldPwd, String newPwd) {
+        LambdaQueryWrapper<Student> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Student::getId, id);
+        Student student = studentMapper.selectOne(wrapper);
+        if (student != null) {
+            if (student.getPassword().equals(oldPwd)) {
+                student.setPassword(newPwd);
+                student.setUpdateTime(new Date());
+                studentMapper.updateById(student);
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        return false;
+    }
 }

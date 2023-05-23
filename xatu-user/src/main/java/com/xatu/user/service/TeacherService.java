@@ -21,4 +21,13 @@ public interface TeacherService {
      * @return 返回该老师实体对象
      */
     Teacher changePhoto(int id, String photoUrl);
+
+    /**
+     * 修改密码
+     * @param id 教师id
+     * @param oldPwd 旧密码
+     * @param newPwd 新密码
+     * @return boolean
+     */
+    boolean changePassword(int id, String oldPwd, String newPwd);
 }

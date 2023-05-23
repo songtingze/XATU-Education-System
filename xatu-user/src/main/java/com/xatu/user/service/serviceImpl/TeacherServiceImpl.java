@@ -1,6 +1,7 @@
 package com.xatu.user.service.serviceImpl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.xatu.user.domain.Student;
 import com.xatu.user.domain.Teacher;
 import com.xatu.user.mapper.TeacherMapper;
 import com.xatu.user.service.TeacherService;
@@ -41,5 +42,24 @@ public class TeacherServiceImpl implements TeacherService {
             teacher.setPassword("");
         }
         return teacher;
+    }
+
+    @Override
+    public boolean changePassword(int id, String oldPwd, String newPwd) {
+        LambdaQueryWrapper<Teacher> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Teacher::getId, id);
+        Teacher teacher = teacherMapper.selectOne(wrapper);
+        if (teacher != null) {
+            if (teacher.getPassword().equals(oldPwd)) {
+                teacher.setPassword(newPwd);
+                teacher.setUpdateTime(new Date());
+                teacherMapper.updateById(teacher);
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        return false;
     }
 }
