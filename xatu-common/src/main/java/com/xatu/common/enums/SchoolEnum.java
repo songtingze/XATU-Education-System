@@ -1,6 +1,6 @@
 package com.xatu.common.enums;
 
-import com.xatu.common.domain.School;
+import com.xatu.common.domain.EnumResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,10 +117,10 @@ public enum SchoolEnum {
         return false;
     }
 
-    public static List<School> getAllSchools(){
-        List<School> schools = new ArrayList<>();
+    public static List<EnumResult> getAllSchools(){
+        List<EnumResult> schools = new ArrayList<>();
         for (SchoolEnum t : SchoolEnum.values()) {
-            schools.add(new School(t.code,t.desc));
+            schools.add(new EnumResult(t.code,t.desc));
         }
         return schools;
     }

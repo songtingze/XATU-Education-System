@@ -1,10 +1,8 @@
 package com.xatu.system.controller;
 
-import cn.dev33.satoken.stp.StpUtil;
-import com.xatu.common.constant.CodeConstants;
+import com.xatu.common.domain.EnumResult;
 import com.xatu.common.domain.PageResult;
 import com.xatu.common.domain.Result;
-import com.xatu.common.domain.School;
 import com.xatu.common.enums.SchoolEnum;
 import com.xatu.system.domain.Student;
 import com.xatu.system.domain.vo.StudentVo;
@@ -14,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +50,7 @@ public class StudentController {
         return isSuccess;
     }
     @GetMapping("/getSchools")
-    public Result<List<School>> getSchools(){
+    public Result<List<EnumResult>> getSchools(){
         return Result.success(SchoolEnum.getAllSchools());
     }
     @PutMapping ("/update")

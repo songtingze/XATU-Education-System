@@ -36,7 +36,7 @@ public class StudentServiceImpl implements StudentService {
     @Resource
     private StudentMapper studentMapper;
 
-    private static final String qiNiuAddress = "http://cdn.wanglei99.xyz/";
+    private static final String qiNiuAddress = "http://cdn.wanglei99.xyz/stu/";
 
     @Override
     public PageResult<Student> getStudentList(StudentVo studentVo) {
