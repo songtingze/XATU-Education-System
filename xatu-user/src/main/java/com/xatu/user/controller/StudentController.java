@@ -67,4 +67,14 @@ public class StudentController {
         }
     }
 
+    @RequestMapping("/stuInfo")
+    public Result<Student> stuInfoController(@RequestParam int id) {
+        Student student = studentService.stuInfo(id);
+        if (student != null) {
+            return Result.success(student);
+        }
+        else {
+            return Result.error(CodeConstants.ERROR, "获取用户信息失败");
+        }
+    }
 }

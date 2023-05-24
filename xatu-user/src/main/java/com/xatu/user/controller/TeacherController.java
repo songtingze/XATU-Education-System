@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
 import com.xatu.common.constant.CodeConstants;
 import com.xatu.common.domain.Result;
+import com.xatu.user.domain.Student;
 import com.xatu.user.domain.Teacher;
 import com.xatu.user.domain.vo.TeacherVo;
 import com.xatu.user.service.TeacherService;
@@ -64,6 +65,17 @@ public class TeacherController {
         }
         else{
             return Result.error(CodeConstants.ERROR, "密码修改失败！");
+        }
+    }
+
+    @RequestMapping("/teaInfo")
+    public Result<Teacher> teaInfoController(@RequestParam int id) {
+        Teacher teacher = teacherService.teaInfo(id);
+        if (teacher != null) {
+            return Result.success(teacher);
+        }
+        else {
+            return Result.error(CodeConstants.ERROR, "获取用户信息失败");
         }
     }
 

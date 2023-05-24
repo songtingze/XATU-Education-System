@@ -1,5 +1,6 @@
 package com.xatu.user.service;
 
+import com.xatu.user.domain.Student;
 import com.xatu.user.domain.Teacher;
 
 /**
@@ -30,4 +31,11 @@ public interface TeacherService {
      * @return boolean
      */
     boolean changePassword(int id, String oldPwd, String newPwd);
+
+    /**
+     * 获取教师个人信息
+     * @param id 教师id
+     * @return 返回学教师信息
+     */
+    Teacher teaInfo(int id);
 }

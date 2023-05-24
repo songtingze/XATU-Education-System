@@ -61,4 +61,15 @@ public class StudentServiceImpl implements StudentService {
         }
         return false;
     }
+
+    @Override
+    public Student stuInfo (int id) {
+        LambdaQueryWrapper<Student> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Student::getId, id);
+        Student student = studentMapper.selectOne(wrapper);
+        if (student != null) {
+            student.setPassword("");
+        }
+        return student;
+    }
 }

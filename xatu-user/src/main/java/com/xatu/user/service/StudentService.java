@@ -30,4 +30,11 @@ public interface StudentService {
      * @return boolean
      */
     boolean changePassword(int id, String oldPwd, String newPwd);
+
+    /**
+     * 获取学生个人信息
+     * @param id 学生id
+     * @return 返回学生信息
+     */
+    Student stuInfo(int id);
 }

@@ -62,4 +62,15 @@ public class TeacherServiceImpl implements TeacherService {
         }
         return false;
     }
+
+    @Override
+    public Teacher teaInfo (int id) {
+        LambdaQueryWrapper<Teacher> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Teacher::getId, id);
+        Teacher teacher = teacherMapper.selectOne(wrapper);
+        if (teacher != null) {
+            teacher.setPassword("");
+        }
+        return teacher;
+    }
 }
