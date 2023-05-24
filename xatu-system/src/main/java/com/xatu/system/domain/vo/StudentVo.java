@@ -31,6 +31,7 @@ public class StudentVo extends Student {
         this.setCreateTime(student.getCreateTime());
         this.setUpdateTime(student.getUpdateTime());
     }
+
     public StudentVo(){
 
     }

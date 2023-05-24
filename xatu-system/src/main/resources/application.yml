@@ -43,6 +43,8 @@ spring:
     port: 6379
     #Redis服务器连接密码，默认为空，若有设置按设置的来
     password:
+#    # Redis数据库索引（默认为0）
+#    database: 1
     jedis:
       pool:
         # 连接池最大连接数，若为负数则表示没有任何限制

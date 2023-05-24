@@ -36,6 +36,8 @@ public class StudentServiceImpl implements StudentService {
     @Resource
     private StudentMapper studentMapper;
 
+    private static final String qiNiuAddress = "http://cdn.wanglei99.xyz/";
+
     @Override
     public PageResult<Student> getStudentList(StudentVo studentVo) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
@@ -143,11 +145,11 @@ public class StudentServiceImpl implements StudentService {
             if(household == null || household.isEmpty()){
                 throw new Exception("导入失败(第\"+(r+1)+\"行，籍贯未填写)");
             }
-            row.getCell(9).setCellType(CellType.STRING);//将每一行第一个单元格设置为字符串类型
-            String photoUrl =row.getCell(9).getStringCellValue();
-            if(photoUrl == null || photoUrl.isEmpty()){
-                throw new Exception("导入失败(第\"+(r+1)+\"行，证件照路径未填写)");
-            }
+//            row.getCell(9).setCellType(CellType.STRING);//将每一行第一个单元格设置为字符串类型
+//            String photoUrl =row.getCell(9).getStringCellValue();
+//            if(photoUrl == null || photoUrl.isEmpty()){
+//                throw new Exception("导入失败(第\"+(r+1)+\"行，证件照路径未填写)");
+//            }
             int school = SchoolEnum.getByDesc(schoolValue);
             //完整的循环一次 就组成了一个对象
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
@@ -164,7 +166,7 @@ public class StudentServiceImpl implements StudentService {
             student.setHousehold(household);
             student.setEnrollmentTime(sdf1.parse(enrollmentTime));
             student.setBirth(sdf2.parse(birth));
-            student.setPhotoUrl(photoUrl);
+            student.setPhotoUrl(qiNiuAddress+school+"/"+classNumber.substring(1)+"/"+number+".jpg");
             student.setCreateTime(new Date());
             student.setUpdateTime(new Date());
             studentList.add(student);
