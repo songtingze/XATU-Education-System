@@ -9,6 +9,7 @@ import com.xatu.common.constant.CodeConstants;
 import com.xatu.common.domain.PageQuery;
 import com.xatu.common.domain.PageResult;
 import com.xatu.common.domain.Result;
+import com.xatu.common.enums.CourseAssessmentEnum;
 import com.xatu.course.domain.SelectCourse;
 import com.xatu.course.domain.SingleCourse;
 import com.xatu.course.domain.Student;
@@ -56,6 +57,7 @@ public class CourseServiceImpl implements CourseService {
             SelectCourseVO dst = new SelectCourseVO();
             BeanUtils.copyProperties(src, dst);
             dst.setSchedule(JSONUtil.parseObj(src.getSchedule()));
+            dst.setAssessment(CourseAssessmentEnum.getByCode(Integer.parseInt(src.getAssessment())).getDesc());
             return dst;
         }).collect(Collectors.toList());
         result.setRecords(selectCourseVOList);
@@ -99,6 +101,7 @@ public class CourseServiceImpl implements CourseService {
             SelectCourseVO dst = new SelectCourseVO();
             BeanUtils.copyProperties(singleCourse, dst);
             dst.setSchedule(JSONUtil.parseObj(singleCourse.getSchedule()));
+            dst.setAssessment(CourseAssessmentEnum.getByCode(Integer.parseInt(singleCourse.getAssessment())).getDesc());
             conflictingList.add(dst);
             conflictingMap.put(time, conflictingList);
         }
@@ -135,6 +138,7 @@ public class CourseServiceImpl implements CourseService {
             SelectCourseVO dst = new SelectCourseVO();
             BeanUtils.copyProperties(src, dst);
             dst.setSchedule(JSONUtil.parseObj(src.getSchedule()));
+            dst.setAssessment(CourseAssessmentEnum.getByCode(Integer.parseInt(src.getAssessment())).getDesc());
             return dst;
         }).collect(Collectors.toList());
         return PageResult.success(result);
@@ -167,7 +171,12 @@ public class CourseServiceImpl implements CourseService {
             ScheduleCeilVO scheduleCeil = new ScheduleCeilVO();
             BeanUtils.copyProperties(course, scheduleCeil);
             scheduleCeil.setLocation(schedule.getStr("location"));
-            scheduleTable.get(timeToIndex.get(duration)).put(dayOfWeek, scheduleCeil);
+            if (scheduleTable.get(timeToIndex.get(duration)).containsKey(dayOfWeek)) {
+                scheduleTable.get(timeToIndex.get(duration)).get(dayOfWeek).setIsConflicting(true);
+            } else {
+                scheduleTable.get(timeToIndex.get(duration)).put(dayOfWeek, scheduleCeil);
+            }
+
         }
         return Result.success(scheduleTable);
     }

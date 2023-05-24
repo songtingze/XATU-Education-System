@@ -9,4 +9,5 @@ public class ScheduleCeilVO {
     private Integer courseIndex;
     private String teacher;
     private String location;
+    private Boolean isConflicting;
 }
