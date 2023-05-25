@@ -20,6 +20,17 @@
         inner join course c on c.number = sc.course_num
         inner join teacher t on t.number = sc.teacher
         inner join select_course sc2 on sc2.course = sc.course_num and sc2.course_index = sc.course_index
-        where sc2.student = #{student}
+        where sc2.student = #{number}
+    </select>
+    <select id="selectCourseScoreByStudentNumber" resultType="com.xatu.course.domain.vo.CourseScoreVO">
+        select c.name,sc.course_num,sc.course_index,c.credit,c.grade,c.period,t.name as teacher,sc2.score,sc2.usual,sc2.level,sc2.create_time as term_time
+        from single_course sc
+        inner join course c on c.number = sc.course_num
+        inner join teacher t on t.number = sc.teacher
+        inner join select_course sc2 on sc2.course = sc.course_num and sc2.course_index = sc.course_index
+        where sc2.student = #{number}
+        <if test="course != null">
+            and c.name like concat('%', #{course}, '%')
+        </if>
     </select>
 </mapper>
