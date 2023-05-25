@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface SingleCourseMapper extends BaseMapper<SingleCourse> {
-    Page<SingleCourseVO> selectAvailableByStudentNumber(@Param("number") Integer number, @Param("grade") Integer grade, Page<SingleCourseVO> page);
+    Page<SingleCourseVO> selectAvailableByStudentNumber(@Param("number") Integer number, @Param("grade") Integer grade, @Param("period") Integer period, Page<SingleCourseVO> page);
 
     List<SingleCourseVO> selectSelectedByStudentNumber(Integer number);
 }

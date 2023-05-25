@@ -23,6 +23,10 @@ public class SelectCourseVO {
 
     private Integer creditHour;
 
+    private Integer grade;
+
+    private String period;
+
     private String assessment;
 
     private String teacher;

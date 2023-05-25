@@ -21,7 +21,11 @@ public class SingleCourseVO {
 
     private Integer creditHour;
 
-    private String assessment;
+    private Integer grade;
+
+    private Integer period;
+
+    private Integer assessment;
 
     private String teacher;
 

@@ -1,6 +1,5 @@
 package com.xatu.course.service.impl;
 
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -10,6 +9,8 @@ import com.xatu.common.domain.PageQuery;
 import com.xatu.common.domain.PageResult;
 import com.xatu.common.domain.Result;
 import com.xatu.common.enums.CourseAssessmentEnum;
+import com.xatu.common.enums.CoursePeriodEnum;
+import com.xatu.common.utils.CourseUtil;
 import com.xatu.course.domain.SelectCourse;
 import com.xatu.course.domain.SingleCourse;
 import com.xatu.course.domain.Student;
@@ -48,16 +49,18 @@ public class CourseServiceImpl implements CourseService {
         Student student = studentMapper.selectOne(wrapper);
         Date enrollmentTime = student.getEnrollmentTime();
         Date now = new Date();
-        int grade = (int) DateUtil.betweenYear(enrollmentTime, now, false) + 1;
+        int grade = CourseUtil.getGradeYear(enrollmentTime, now);
+        CoursePeriodEnum period = CourseUtil.getCoursePeriodByDate(now);
 //        grade = 2;
 
-        Page<SingleCourseVO> pageResult = singleCourseMapper.selectAvailableByStudentNumber(studentNumber, grade, pageQuery.build());
+        Page<SingleCourseVO> pageResult = singleCourseMapper.selectAvailableByStudentNumber(studentNumber, grade, period.getCode(), pageQuery.build());
         Page<SelectCourseVO> result = Page.of(pageResult.getCurrent(), pageResult.getSize());
         List<SelectCourseVO> selectCourseVOList = pageResult.getRecords().stream().map(src -> {
             SelectCourseVO dst = new SelectCourseVO();
             BeanUtils.copyProperties(src, dst);
             dst.setSchedule(JSONUtil.parseObj(src.getSchedule()));
-            dst.setAssessment(CourseAssessmentEnum.getByCode(Integer.parseInt(src.getAssessment())).getDesc());
+            dst.setAssessment(CourseAssessmentEnum.getByCode(src.getAssessment()).getDesc());
+            dst.setPeriod(CoursePeriodEnum.getByCode(src.getPeriod()).getDesc());
             return dst;
         }).collect(Collectors.toList());
         result.setRecords(selectCourseVOList);
@@ -101,7 +104,8 @@ public class CourseServiceImpl implements CourseService {
             SelectCourseVO dst = new SelectCourseVO();
             BeanUtils.copyProperties(singleCourse, dst);
             dst.setSchedule(JSONUtil.parseObj(singleCourse.getSchedule()));
-            dst.setAssessment(CourseAssessmentEnum.getByCode(Integer.parseInt(singleCourse.getAssessment())).getDesc());
+            dst.setAssessment(CourseAssessmentEnum.getByCode(singleCourse.getAssessment()).getDesc());
+            dst.setPeriod(CoursePeriodEnum.getByCode(singleCourse.getPeriod()).getDesc());
             conflictingList.add(dst);
             conflictingMap.put(time, conflictingList);
         }
@@ -138,7 +142,8 @@ public class CourseServiceImpl implements CourseService {
             SelectCourseVO dst = new SelectCourseVO();
             BeanUtils.copyProperties(src, dst);
             dst.setSchedule(JSONUtil.parseObj(src.getSchedule()));
-            dst.setAssessment(CourseAssessmentEnum.getByCode(Integer.parseInt(src.getAssessment())).getDesc());
+            dst.setAssessment(CourseAssessmentEnum.getByCode(src.getAssessment()).getDesc());
+            dst.setPeriod(CoursePeriodEnum.getByCode(src.getPeriod()).getDesc());
             return dst;
         }).collect(Collectors.toList());
         return PageResult.success(result);
