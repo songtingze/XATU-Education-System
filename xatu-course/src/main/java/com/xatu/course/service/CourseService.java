@@ -45,4 +45,9 @@ public interface CourseService {
      * 获取某节课的选课学生名单
      */
     PageResult<Student> getStudentList(String courseNum, Integer courseIndex);
+
+    /**
+     * 获取教师课程表
+     */
+    Result<List<Map<String, ScheduleCeilVO>>> getTeacherSchedule(Integer teacherNumber);
 }

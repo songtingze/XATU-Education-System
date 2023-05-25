@@ -16,4 +16,6 @@ public interface SingleCourseMapper extends BaseMapper<SingleCourse> {
     List<SingleCourseVO> selectSelectedByStudentNumber(@Param("number") Integer number);
 
     Page<CourseScoreVO> selectCourseScoreByStudentNumber(@Param("number") Integer number, @Param("course") String course, Page<SingleCourseVO> page);
+
+    List<SingleCourseVO> selectCourseByTeacherNumber(@Param("number") Integer teacherNumber);
 }

@@ -80,4 +80,12 @@ public class CourseController {
         return courseService.getStudentList(courseNum, courseIndex);
     }
 
+    /**
+     * 获取教师课程表
+     */
+    @GetMapping("/schedule/teacher/get")
+    public Result<List<Map<String, ScheduleCeilVO>>> getTeacherSchedule(@RequestParam Integer teacherNumber) {
+        return courseService.getTeacherSchedule(teacherNumber);
+    }
+
 }

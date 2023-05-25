@@ -32,4 +32,6 @@ public class SingleCourseVO {
     private String schedule;
 
     private Integer selected;
+
+    private Integer studentCount;
 }
