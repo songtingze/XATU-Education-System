@@ -1,5 +1,10 @@
 package com.xatu.common.enums;
 
+import com.xatu.common.domain.EnumResult;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public enum CourseAssessmentEnum {
 
     POINT(0, "百分制"),
@@ -25,6 +30,22 @@ public enum CourseAssessmentEnum {
         }
         return null;
     }
+    public static int getByDesc(String desc) {
+        for (CourseAssessmentEnum t : CourseAssessmentEnum.values()) {
+            if (t.getDesc().equalsIgnoreCase(desc)) {
+                return t.getCode();
+            }
+        }
+        return -1;
+    }
+
+    public static List<EnumResult> getAllAssessments(){
+        List<EnumResult> assessments = new ArrayList<>();
+        for (CourseAssessmentEnum t : CourseAssessmentEnum.values()) {
+            assessments.add(new EnumResult(t.code,t.desc));
+        }
+        return assessments;
+    }
 
     public static Boolean isIn(int code) {
         for (CourseAssessmentEnum t : CourseAssessmentEnum.values()) {
@@ -34,6 +55,8 @@ public enum CourseAssessmentEnum {
         }
         return false;
     }
+
+
 
     public int getCode() {
         return code;

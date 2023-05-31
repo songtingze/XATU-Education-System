@@ -5,23 +5,24 @@ import com.xatu.common.domain.EnumResult;
 import java.util.ArrayList;
 import java.util.List;
 
-public enum TitleEnum {
-
-    LECTURER(1, "讲师"),
-    ASSOCIATE_PROFESSOR(2,"副教授"),
-    PROFESSOR(3,"教授"),
+public enum GradeEnum {
+    FRESHMAN(0, "大一"),
+    SOPHOMORE(1,"大二"),
+    JUNIOR(2,"大三"),
+    SENIOR(3, "大四"),
+    FIFTH_GRADE(4,"大五"),
     ;
 
     private int code;
     private String desc;
 
-    TitleEnum(int code, String desc) {
+    GradeEnum(int code, String desc) {
         this.code = code;
         this.desc = desc;
     }
 
-    public static TitleEnum getByCode(int code) {
-        for (TitleEnum t : TitleEnum.values()) {
+    public static GradeEnum getByCode(int code) {
+        for (GradeEnum t : GradeEnum.values()) {
             if (t.getCode() == code) {
                 return t;
             }
@@ -29,7 +30,7 @@ public enum TitleEnum {
         return null;
     }
     public static int getByDesc(String desc) {
-        for (TitleEnum t : TitleEnum.values()) {
+        for (GradeEnum t : GradeEnum.values()) {
             if (t.getDesc().equalsIgnoreCase(desc)) {
                 return t.getCode();
             }
@@ -38,7 +39,7 @@ public enum TitleEnum {
     }
 
     public static Boolean isIn(int code) {
-        for (TitleEnum t : TitleEnum.values()) {
+        for (GradeEnum t : GradeEnum.values()) {
             if (t.getCode()==code) {
                 return true;
             }
@@ -46,12 +47,12 @@ public enum TitleEnum {
         return false;
     }
 
-    public static List<EnumResult> getAllTitles(){
-        List<EnumResult> titles = new ArrayList<>();
-        for (TitleEnum t : TitleEnum.values()) {
-            titles.add(new EnumResult(t.code,t.desc));
+    public static List<EnumResult> getAllGrades(){
+        List<EnumResult> grades = new ArrayList<>();
+        for (GradeEnum t : GradeEnum.values()) {
+            grades.add(new EnumResult(t.code,t.desc));
         }
-        return titles;
+        return grades;
     }
 
     public int getCode() {

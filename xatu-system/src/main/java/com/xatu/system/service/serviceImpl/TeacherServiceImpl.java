@@ -8,7 +8,6 @@ import com.xatu.common.domain.PageResult;
 import com.xatu.common.domain.Result;
 import com.xatu.common.enums.SchoolEnum;
 import com.xatu.common.enums.TitleEnum;
-import com.xatu.system.domain.Student;
 import com.xatu.system.domain.Teacher;
 import com.xatu.system.domain.vo.TeacherVo;
 import com.xatu.system.mapper.TeacherMapper;
@@ -245,5 +244,12 @@ public class TeacherServiceImpl implements TeacherService {
             }
         }
         return notnull;
+    }
+
+    @Override
+    public Teacher getTeacherByNumber(String number) {
+        LambdaQueryWrapper<Teacher> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Teacher::getNumber, number);
+        return teacherMapper.selectOne(wrapper);
     }
 }

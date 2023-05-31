@@ -22,4 +22,6 @@ public interface TeacherService {
     public Result<Boolean> batchDelete(String sid);
 
     public boolean batchImport(String fileName, MultipartFile file) throws Exception;//导入Excel
+
+    public Teacher getTeacherByNumber(String number);
 }

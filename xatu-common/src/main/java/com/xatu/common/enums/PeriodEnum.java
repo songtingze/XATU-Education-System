@@ -5,23 +5,22 @@ import com.xatu.common.domain.EnumResult;
 import java.util.ArrayList;
 import java.util.List;
 
-public enum TitleEnum {
-
-    LECTURER(1, "讲师"),
-    ASSOCIATE_PROFESSOR(2,"副教授"),
-    PROFESSOR(3,"教授"),
+public enum PeriodEnum {
+    SPRING(1, "春"),
+    FALL(2,"秋"),
+    SPRING_FALL(3,"春秋"),
     ;
 
     private int code;
     private String desc;
 
-    TitleEnum(int code, String desc) {
+    PeriodEnum(int code, String desc) {
         this.code = code;
         this.desc = desc;
     }
 
-    public static TitleEnum getByCode(int code) {
-        for (TitleEnum t : TitleEnum.values()) {
+    public static PeriodEnum getByCode(int code) {
+        for (PeriodEnum t : PeriodEnum.values()) {
             if (t.getCode() == code) {
                 return t;
             }
@@ -29,7 +28,7 @@ public enum TitleEnum {
         return null;
     }
     public static int getByDesc(String desc) {
-        for (TitleEnum t : TitleEnum.values()) {
+        for (PeriodEnum t : PeriodEnum.values()) {
             if (t.getDesc().equalsIgnoreCase(desc)) {
                 return t.getCode();
             }
@@ -38,7 +37,7 @@ public enum TitleEnum {
     }
 
     public static Boolean isIn(int code) {
-        for (TitleEnum t : TitleEnum.values()) {
+        for (PeriodEnum t : PeriodEnum.values()) {
             if (t.getCode()==code) {
                 return true;
             }
@@ -46,12 +45,12 @@ public enum TitleEnum {
         return false;
     }
 
-    public static List<EnumResult> getAllTitles(){
-        List<EnumResult> titles = new ArrayList<>();
-        for (TitleEnum t : TitleEnum.values()) {
-            titles.add(new EnumResult(t.code,t.desc));
+    public static List<EnumResult> getAllPeriods(){
+        List<EnumResult> periods = new ArrayList<>();
+        for (PeriodEnum t : PeriodEnum.values()) {
+            periods.add(new EnumResult(t.code,t.desc));
         }
-        return titles;
+        return periods;
     }
 
     public int getCode() {
