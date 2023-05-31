@@ -18,7 +18,11 @@ public class SingleCourse {
 
     private Integer teacher;
 
-    private String schedule;
+    private Integer dayTime;
+
+    private Integer hourPeriod;
+
+    private String location;
 
     private Integer capacity;
 

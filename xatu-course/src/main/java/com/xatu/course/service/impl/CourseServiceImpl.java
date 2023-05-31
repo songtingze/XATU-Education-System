@@ -1,7 +1,5 @@
 package com.xatu.course.service.impl;
 
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xatu.common.constant.CodeConstants;
@@ -58,7 +56,7 @@ public class CourseServiceImpl implements CourseService {
         List<SelectCourseVO> selectCourseVOList = pageResult.getRecords().stream().map(src -> {
             SelectCourseVO dst = new SelectCourseVO();
             BeanUtils.copyProperties(src, dst);
-            dst.setSchedule(JSONUtil.parseObj(src.getSchedule()));
+            dst.setHourPeriodDetail("");
             dst.setAssessment(CourseAssessmentEnum.getByCode(src.getAssessment()).getDesc());
             dst.setPeriod(CoursePeriodEnum.getByCode(src.getPeriod()).getDesc());
             return dst;
@@ -98,12 +96,11 @@ public class CourseServiceImpl implements CourseService {
         Map<String, List<SelectCourseVO>> conflictingMap = new HashMap<>();
         for (SingleCourseVO singleCourse : listResult) {
             // 遍历所选课程，以课程时间安排中的时间为key建立map，
-            String schedule = singleCourse.getSchedule();
-            String time = JSONUtil.parseObj(schedule).getStr("time");
+            String time = singleCourse.getDayTime() + "," + singleCourse.getHourPeriod();
             List<SelectCourseVO> conflictingList = conflictingMap.getOrDefault(time, new ArrayList<>());
             SelectCourseVO dst = new SelectCourseVO();
             BeanUtils.copyProperties(singleCourse, dst);
-            dst.setSchedule(JSONUtil.parseObj(singleCourse.getSchedule()));
+            dst.setHourPeriodDetail("");
             dst.setAssessment(CourseAssessmentEnum.getByCode(singleCourse.getAssessment()).getDesc());
             dst.setPeriod(CoursePeriodEnum.getByCode(singleCourse.getPeriod()).getDesc());
             conflictingList.add(dst);
@@ -141,7 +138,7 @@ public class CourseServiceImpl implements CourseService {
         List<SelectCourseVO> result = listResult.stream().map(src -> {
             SelectCourseVO dst = new SelectCourseVO();
             BeanUtils.copyProperties(src, dst);
-            dst.setSchedule(JSONUtil.parseObj(src.getSchedule()));
+            dst.setHourPeriodDetail("");
             dst.setAssessment(CourseAssessmentEnum.getByCode(src.getAssessment()).getDesc());
             dst.setPeriod(CoursePeriodEnum.getByCode(src.getPeriod()).getDesc());
             return dst;
@@ -150,36 +147,24 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Result<List<Map<String, ScheduleCeilVO>>> getSchedule(Integer studentNumber) {
+    public Result<List<Map<Integer, ScheduleCeilVO>>> getSchedule(Integer studentNumber) {
         // TODO 冲突课程只会显示一个
-        List<Map<String, ScheduleCeilVO>> scheduleTable = new ArrayList<>();
-        // 每天划分为7个时间段
-        Map<String, Integer> timeToIndex = new HashMap<>();
-        timeToIndex.put("1", 0);
-        timeToIndex.put("2", 1);
-        timeToIndex.put("3", 2);
-        timeToIndex.put("4", 3);
-        timeToIndex.put("5", 4);
-        timeToIndex.put("6", 5);
-        timeToIndex.put("7", 6);
-
+        List<Map<Integer, ScheduleCeilVO>> scheduleTable = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
             scheduleTable.add(new HashMap<>());
         }
         List<SingleCourseVO> listResult = singleCourseMapper.selectSelectedByStudentNumber(studentNumber);
         // 遍历每一节课，放到对应位置
         for (SingleCourseVO course : listResult) {
-            JSONObject schedule = JSONUtil.parseObj(course.getSchedule());
-            String[] time = schedule.getStr("time").split(",");
-            String dayOfWeek = time[0], duration = time[1];
+            int dayOfWeek = course.getDayTime(), duration = course.getHourPeriod();
 
             ScheduleCeilVO scheduleCeil = new ScheduleCeilVO();
             BeanUtils.copyProperties(course, scheduleCeil);
-            scheduleCeil.setLocation(schedule.getStr("location"));
-            if (scheduleTable.get(timeToIndex.get(duration)).containsKey(dayOfWeek)) {
-                scheduleTable.get(timeToIndex.get(duration)).get(dayOfWeek).setIsConflicting(true);
+            scheduleCeil.setLocation(course.getLocation());
+            if (scheduleTable.get(duration - 1).containsKey(dayOfWeek)) {
+                scheduleTable.get(duration - 1).get(dayOfWeek).setIsConflicting(true);
             } else {
-                scheduleTable.get(timeToIndex.get(duration)).put(dayOfWeek, scheduleCeil);
+                scheduleTable.get(duration - 1).put(dayOfWeek, scheduleCeil);
             }
 
         }
@@ -193,35 +178,23 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Result<List<Map<String, ScheduleCeilVO>>> getTeacherSchedule(Integer teacherNumber) {
-        List<Map<String, ScheduleCeilVO>> scheduleTable = new ArrayList<>();
-        // 每天划分为7个时间段
-        Map<String, Integer> timeToIndex = new HashMap<>();
-        timeToIndex.put("1", 0);
-        timeToIndex.put("2", 1);
-        timeToIndex.put("3", 2);
-        timeToIndex.put("4", 3);
-        timeToIndex.put("5", 4);
-        timeToIndex.put("6", 5);
-        timeToIndex.put("7", 6);
-
+    public Result<List<Map<Integer, ScheduleCeilVO>>> getTeacherSchedule(Integer teacherNumber) {
+        List<Map<Integer, ScheduleCeilVO>> scheduleTable = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
             scheduleTable.add(new HashMap<>());
         }
         List<SingleCourseVO> listResult = singleCourseMapper.selectCourseByTeacherNumber(teacherNumber);
         // 遍历每一节课，放到对应位置
         for (SingleCourseVO course : listResult) {
-            JSONObject schedule = JSONUtil.parseObj(course.getSchedule());
-            String[] time = schedule.getStr("time").split(",");
-            String dayOfWeek = time[0], duration = time[1];
+            int dayOfWeek = course.getDayTime(), duration = course.getHourPeriod();
 
             ScheduleCeilVO scheduleCeil = new ScheduleCeilVO();
             BeanUtils.copyProperties(course, scheduleCeil);
-            scheduleCeil.setLocation(schedule.getStr("location"));
-            if (scheduleTable.get(timeToIndex.get(duration)).containsKey(dayOfWeek)) {
-                scheduleTable.get(timeToIndex.get(duration)).get(dayOfWeek).setIsConflicting(true);
+            scheduleCeil.setLocation(course.getLocation());
+            if (scheduleTable.get(duration - 1).containsKey(dayOfWeek)) {
+                scheduleTable.get(duration - 1).get(dayOfWeek).setIsConflicting(true);
             } else {
-                scheduleTable.get(timeToIndex.get(duration)).put(dayOfWeek, scheduleCeil);
+                scheduleTable.get(duration - 1).put(dayOfWeek, scheduleCeil);
             }
         }
         return Result.success(scheduleTable);

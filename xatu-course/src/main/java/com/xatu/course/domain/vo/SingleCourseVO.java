@@ -29,7 +29,11 @@ public class SingleCourseVO {
 
     private String teacher;
 
-    private String schedule;
+    private Integer dayTime;
+
+    private Integer hourPeriod;
+
+    private String location;
 
     private Integer selected;
 

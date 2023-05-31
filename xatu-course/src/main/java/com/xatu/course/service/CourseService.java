@@ -39,7 +39,7 @@ public interface CourseService {
     /**
      * 获取课程表
      */
-    Result<List<Map<String, ScheduleCeilVO>>> getSchedule(Integer studentNumber);
+    Result<List<Map<Integer, ScheduleCeilVO>>> getSchedule(Integer studentNumber);
 
     /**
      * 获取某节课的选课学生名单
@@ -49,5 +49,5 @@ public interface CourseService {
     /**
      * 获取教师课程表
      */
-    Result<List<Map<String, ScheduleCeilVO>>> getTeacherSchedule(Integer teacherNumber);
+    Result<List<Map<Integer, ScheduleCeilVO>>> getTeacherSchedule(Integer teacherNumber);
 }

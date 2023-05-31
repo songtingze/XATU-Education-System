@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xatu.course.mapper.SingleCourseMapper">
     <select id="selectAvailableByStudentNumber" resultType="com.xatu.course.domain.vo.SingleCourseVO">
-        select c.name,sc.course_num,sc.course_index,sc.capacity,sc.remain,sc.info,c.credit,c.credit_hour,c.grade,c.period,c.assessment,t.name as teacher,sc.schedule,
+        select c.name,sc.course_num,sc.course_index,sc.capacity,sc.remain,sc.info,c.credit,c.credit_hour,c.grade,c.period,c.assessment,t.name as teacher,sc.day_time,sc.hour_period,sc.location,
                IF(sc2.id is not null,1,0) as selected
         from single_course sc
         inner join course c on c.number = sc.course_num
@@ -15,7 +15,7 @@
         ) and ((c.grade = #{grade} and c.period&amp;#{period} > 0) or c.is_only_major = 0)
     </select>
     <select id="selectSelectedByStudentNumber" resultType="com.xatu.course.domain.vo.SingleCourseVO">
-        select c.name,sc.course_num,sc.course_index,sc.capacity,sc.remain,sc.info,c.credit,c.credit_hour,c.grade,c.period,c.assessment,t.name as teacher,sc.schedule
+        select c.name,sc.course_num,sc.course_index,sc.capacity,sc.remain,sc.info,c.credit,c.credit_hour,c.grade,c.period,c.assessment,t.name as teacher,sc.day_time,sc.hour_period,sc.location
         from single_course sc
         inner join course c on c.number = sc.course_num
         inner join teacher t on t.number = sc.teacher
@@ -34,7 +34,7 @@
         </if>
     </select>
     <select id="selectCourseByTeacherNumber" resultType="com.xatu.course.domain.vo.SingleCourseVO">
-        select c.name,sc.course_num,sc.course_index,c.credit,c.credit_hour,c.period,c.assessment,sc.schedule,
+        select c.name,sc.course_num,sc.course_index,c.credit,c.credit_hour,c.period,c.assessment,sc.day_time,sc.hour_period,sc.location,
         (select count(*) from student s inner join select_course sc2 on sc2.student = s.number
         and sc2.course = sc.course_num and sc2.course_index = sc.course_index
         ) student_count

@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xatu.course.mapper.SelectCourseMapper">
+    <update id="updateScoreByStudentNumber">
+        update select_course
+        <set>
+            <if test="usual != null">
+                usual = #{usual},
+            </if>
+            <if test="score != null">
+                score = #{score},
+            </if>
+            <if test="level != null">
+                level = #{level},
+            </if>
+        </set>
+        where course = #{course} and course_index = #{courseIndex} and student = #{student}
+    </update>
 </mapper>

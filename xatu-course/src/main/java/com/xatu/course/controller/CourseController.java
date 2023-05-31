@@ -68,7 +68,7 @@ public class CourseController {
      * 获取课程表
      */
     @GetMapping("/schedule/get")
-    public Result<List<Map<String, ScheduleCeilVO>>> getSchedule(@RequestParam Integer studentNumber) {
+    public Result<List<Map<Integer, ScheduleCeilVO>>> getSchedule(@RequestParam Integer studentNumber) {
         return courseService.getSchedule(studentNumber);
     }
 
@@ -84,7 +84,7 @@ public class CourseController {
      * 获取教师课程表
      */
     @GetMapping("/schedule/teacher/get")
-    public Result<List<Map<String, ScheduleCeilVO>>> getTeacherSchedule(@RequestParam Integer teacherNumber) {
+    public Result<List<Map<Integer, ScheduleCeilVO>>> getTeacherSchedule(@RequestParam Integer teacherNumber) {
         return courseService.getTeacherSchedule(teacherNumber);
     }
 

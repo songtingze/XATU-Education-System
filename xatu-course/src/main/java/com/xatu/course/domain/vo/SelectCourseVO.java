@@ -2,8 +2,6 @@ package com.xatu.course.domain.vo;
 
 import lombok.Data;
 
-import java.util.Map;
-
 @Data
 public class SelectCourseVO {
 
@@ -31,7 +29,13 @@ public class SelectCourseVO {
 
     private String teacher;
 
-    private Map<String, Object> schedule;
+    private Integer dayTime;
+
+    private Integer hourPeriod;
+
+    private String hourPeriodDetail;
+
+    private String location;
 
     private Integer selected;
 }
