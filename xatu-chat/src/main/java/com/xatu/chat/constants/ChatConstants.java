@@ -11,5 +11,5 @@ public class ChatConstants {
     /**
      * 以上反代网址使用的免费 key
      */
-    public static final String API_KEY = "sk-0PfcSdT723UR44igwVxvEWvLoZJgi0FJyZWy0WCCATp5ka2a";
+    public static final String API_KEY = "sk-eNnNyUhyyMPQPqtOTb1XoONSsS3FmWC5hxfc2ZziImFiqUIv";
 }
