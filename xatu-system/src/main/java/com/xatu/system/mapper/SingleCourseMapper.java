@@ -6,4 +6,5 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface SingleCourseMapper extends BaseMapper<SingleCourse> {
+    int initCourseRemain();
 }

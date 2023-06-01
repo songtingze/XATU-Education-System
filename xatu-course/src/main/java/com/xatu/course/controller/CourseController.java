@@ -1,8 +1,10 @@
 package com.xatu.course.controller;
 
+import com.xatu.common.domain.EnumResult;
 import com.xatu.common.domain.PageQuery;
 import com.xatu.common.domain.PageResult;
 import com.xatu.common.domain.Result;
+import com.xatu.common.enums.HourPeriodEnum;
 import com.xatu.course.domain.Student;
 import com.xatu.course.domain.vo.ScheduleCeilVO;
 import com.xatu.course.domain.vo.SelectCourseVO;
@@ -86,6 +88,11 @@ public class CourseController {
     @GetMapping("/schedule/teacher/get")
     public Result<List<Map<Integer, ScheduleCeilVO>>> getTeacherSchedule(@RequestParam Integer teacherNumber) {
         return courseService.getTeacherSchedule(teacherNumber);
+    }
+
+    @GetMapping("/enums/hour")
+    public Result<List<EnumResult>> getHourEnums() {
+        return Result.success(HourPeriodEnum.getAllHourPeriods());
     }
 
 }

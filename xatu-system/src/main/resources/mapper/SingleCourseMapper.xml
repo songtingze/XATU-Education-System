@@ -4,4 +4,8 @@
     <!--    <select id="findAllUser" parameterType="Map" resultType="com.xatu.system.domain.Student">-->
     <!--        select * from bookshopmanage.tbl_user limit #{startIndex},#{pageSize}-->
     <!--    </select>-->
+    <update id="initCourseRemain">
+        update single_course
+        set remain = capacity
+    </update>
 </mapper>

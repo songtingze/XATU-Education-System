@@ -7,32 +7,33 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class SelectCourse {
-
+public class ScheduleTask {
     @TableId(type = IdType.AUTO)
     private Integer id;
-
-    private String course;
-
-    private Integer courseIndex;
-
-    private Integer student;
-
-    private Integer score;
-
-    private Integer usual;
-
-    private Integer level;
-
-    private Integer evaluation;
-
-    private Integer status;
-
+    /**
+     * 选课学年
+     */
     private String term;
-
+    /**
+     * 选课时段
+     */
     private Integer period;
-
+    /**
+     * 说明
+     */
+    private String info;
+    /**
+     * 选课开始时间
+     */
+    private Date beginTime;
+    /**
+     * 选课结束时间
+     */
+    private Date endTime;
+    /**
+     * 状态
+     */
+    private Integer status;
     private Date createTime;
-
     private Date updateTime;
 }

@@ -8,13 +8,16 @@ import com.xatu.common.domain.PageResult;
 import com.xatu.common.domain.Result;
 import com.xatu.common.enums.CourseAssessmentEnum;
 import com.xatu.common.enums.CoursePeriodEnum;
+import com.xatu.common.enums.ScheduleTaskStatusEnum;
 import com.xatu.common.utils.CourseUtil;
+import com.xatu.course.domain.ScheduleTask;
 import com.xatu.course.domain.SelectCourse;
 import com.xatu.course.domain.SingleCourse;
 import com.xatu.course.domain.Student;
 import com.xatu.course.domain.vo.ScheduleCeilVO;
 import com.xatu.course.domain.vo.SelectCourseVO;
 import com.xatu.course.domain.vo.SingleCourseVO;
+import com.xatu.course.mapper.ScheduleTaskMapper;
 import com.xatu.course.mapper.SelectCourseMapper;
 import com.xatu.course.mapper.SingleCourseMapper;
 import com.xatu.course.mapper.StudentMapper;
@@ -39,6 +42,9 @@ public class CourseServiceImpl implements CourseService {
     @Resource
     private StudentMapper studentMapper;
 
+    @Resource
+    private ScheduleTaskMapper scheduleTaskMapper;
+
     @Override
     public PageResult<SelectCourseVO> listSelectAvailableCourse(Integer studentNumber, PageQuery pageQuery) {
         // 根据当前日期与入学日期的年份差，得到学生当前年级
@@ -48,10 +54,12 @@ public class CourseServiceImpl implements CourseService {
         Date enrollmentTime = student.getEnrollmentTime();
         Date now = new Date();
         int grade = CourseUtil.getGradeYear(enrollmentTime, now);
-        CoursePeriodEnum period = CourseUtil.getCoursePeriodByDate(now);
 //        grade = 2;
-
-        Page<SingleCourseVO> pageResult = singleCourseMapper.selectAvailableByStudentNumber(studentNumber, grade, period.getCode(), pageQuery.build());
+        ScheduleTask task = getCurrentScheduleTask(false);
+        if (task == null) {
+            throw new RuntimeException("选课任务不存在");
+        }
+        Page<SingleCourseVO> pageResult = singleCourseMapper.selectAvailableByStudentNumber(studentNumber, grade, task.getPeriod(), task.getTerm(), pageQuery.build());
         Page<SelectCourseVO> result = Page.of(pageResult.getCurrent(), pageResult.getSize());
         List<SelectCourseVO> selectCourseVOList = pageResult.getRecords().stream().map(src -> {
             SelectCourseVO dst = new SelectCourseVO();
@@ -79,6 +87,10 @@ public class CourseServiceImpl implements CourseService {
         }
         singleCourseMapper.updateById(targetCourse);
         // 再选中课
+        ScheduleTask task = getCurrentScheduleTask(false);
+        if (task == null) {
+            throw new RuntimeException("选课任务不存在");
+        }
         SelectCourse entity = new SelectCourse();
         entity.setStudent(studentNumber);
         entity.setCourse(courseNum);
@@ -86,13 +98,30 @@ public class CourseServiceImpl implements CourseService {
         Date now = new Date();
         entity.setCreateTime(now);
         entity.setUpdateTime(now);
+        entity.setTerm(task.getTerm());
+        entity.setPeriod(task.getPeriod());
         selectCourseMapper.insert(entity);
         return Result.success();
     }
 
+    private ScheduleTask getCurrentScheduleTask(boolean courseSchedule) {
+        LambdaQueryWrapper<ScheduleTask> wrapper1 = new LambdaQueryWrapper<>();
+        wrapper1
+                .orderByDesc(ScheduleTask::getCreateTime);
+        if (!courseSchedule) {
+            wrapper1.eq(ScheduleTask::getStatus, ScheduleTaskStatusEnum.PROCESSING.getCode());
+        }
+        wrapper1.last("limit 1");
+        return scheduleTaskMapper.selectOne(wrapper1);
+    }
+
     @Override
     public Result<Map<String, List<SelectCourseVO>>> listConflictingCourse(Integer studentNumber) {
-        List<SingleCourseVO> listResult = singleCourseMapper.selectSelectedByStudentNumber(studentNumber);
+        ScheduleTask task = getCurrentScheduleTask(false);
+        if (task == null) {
+            throw new RuntimeException("选课任务不存在");
+        }
+        List<SingleCourseVO> listResult = singleCourseMapper.selectSelectedByStudentNumber(studentNumber, task.getPeriod(), task.getTerm());
         Map<String, List<SelectCourseVO>> conflictingMap = new HashMap<>();
         for (SingleCourseVO singleCourse : listResult) {
             // 遍历所选课程，以课程时间安排中的时间为key建立map，
@@ -124,6 +153,10 @@ public class CourseServiceImpl implements CourseService {
         }
         singleCourseMapper.updateById(targetCourse);
         // 再退课
+        ScheduleTask task = getCurrentScheduleTask(false);
+        if (task == null) {
+            throw new RuntimeException("选课任务不存在");
+        }
         LambdaQueryWrapper<SelectCourse> wrapper1 = new LambdaQueryWrapper<>();
         wrapper1.eq(SelectCourse::getStudent, studentNumber)
                 .eq(SelectCourse::getCourse, courseNum)
@@ -134,7 +167,11 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public PageResult<SelectCourseVO> listSelectedCourse(Integer studentNumber) {
-        List<SingleCourseVO> listResult = singleCourseMapper.selectSelectedByStudentNumber(studentNumber);
+        ScheduleTask task = getCurrentScheduleTask(false);
+        if (task == null) {
+            throw new RuntimeException("选课任务不存在");
+        }
+        List<SingleCourseVO> listResult = singleCourseMapper.selectSelectedByStudentNumber(studentNumber, task.getPeriod(), task.getTerm());
         List<SelectCourseVO> result = listResult.stream().map(src -> {
             SelectCourseVO dst = new SelectCourseVO();
             BeanUtils.copyProperties(src, dst);
@@ -153,7 +190,11 @@ public class CourseServiceImpl implements CourseService {
         for (int i = 0; i < 7; i++) {
             scheduleTable.add(new HashMap<>());
         }
-        List<SingleCourseVO> listResult = singleCourseMapper.selectSelectedByStudentNumber(studentNumber);
+        ScheduleTask task = getCurrentScheduleTask(true);
+        if (task == null) {
+            throw new RuntimeException("选课任务不存在");
+        }
+        List<SingleCourseVO> listResult = singleCourseMapper.selectSelectedByStudentNumber(studentNumber, task.getPeriod(), task.getTerm());
         // 遍历每一节课，放到对应位置
         for (SingleCourseVO course : listResult) {
             int dayOfWeek = course.getDayTime(), duration = course.getHourPeriod();

@@ -7,7 +7,7 @@
         from single_course sc
         inner join course c on c.number = sc.course_num
         inner join teacher t on t.number = sc.teacher
-        left join select_course sc2 on sc2.course = sc.course_num and sc2.course_index = sc.course_index and sc2.student = #{number}
+        left join select_course sc2 on sc2.course = sc.course_num and sc2.course_index = sc.course_index and sc2.student = #{number} and sc2.term = #{term}
         where c.school = (
             select school
             from student
@@ -20,10 +20,10 @@
         inner join course c on c.number = sc.course_num
         inner join teacher t on t.number = sc.teacher
         inner join select_course sc2 on sc2.course = sc.course_num and sc2.course_index = sc.course_index
-        where sc2.student = #{number}
+        where sc2.student = #{number} and sc2.term = #{term} and sc2.period = #{period}
     </select>
     <select id="selectCourseScoreByStudentNumber" resultType="com.xatu.course.domain.vo.CourseScoreVO">
-        select c.name,sc.course_num,sc.course_index,c.credit,c.grade,c.period,t.name as teacher,sc2.score,sc2.usual,sc2.level,sc2.create_time as term_time
+        select sc2.term,sc2.period,c.name,sc.course_num,sc.course_index,c.credit,c.grade,t.name as teacher,sc2.score,sc2.usual,sc2.level,sc2.create_time as term_time
         from single_course sc
         inner join course c on c.number = sc.course_num
         inner join teacher t on t.number = sc.teacher

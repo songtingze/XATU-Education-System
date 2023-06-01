@@ -12,6 +12,7 @@ import com.xatu.common.enums.ScheduleTaskStatusEnum;
 import com.xatu.system.domain.ScheduleTask;
 import com.xatu.system.domain.vo.ScheduleTaskVo;
 import com.xatu.system.mapper.ScheduleTaskMapper;
+import com.xatu.system.mapper.SingleCourseMapper;
 import com.xatu.system.service.ScheduleTaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,9 @@ public class ScheduleTaskServiceImpl implements ScheduleTaskService {
 
     @Resource
     private ScheduleTaskMapper scheduleTaskMapper;
+
+    @Resource
+    private SingleCourseMapper singleCourseMapper;
 
     @Override
     public PageResult<ScheduleTaskVo> listScheduleTask(String term, Integer period, PageQuery pageQuery) {
@@ -81,6 +85,7 @@ public class ScheduleTaskServiceImpl implements ScheduleTaskService {
                 if (DateUtil.compare(now, task.getBeginTime()) >= 0) {
                     task.setStatus(ScheduleTaskStatusEnum.PROCESSING.getCode());
                     int res = scheduleTaskMapper.updateById(task);
+                    singleCourseMapper.initCourseRemain();
                     if (res == 1) {
                         logger.info("[选课定时任务][id={}]选课开始", task.getId());
                     } else {
@@ -110,6 +115,8 @@ public class ScheduleTaskServiceImpl implements ScheduleTaskService {
         }
         task.setStatus(ScheduleTaskStatusEnum.PROCESSING.getCode());
         int res = scheduleTaskMapper.updateById(task);
+        int count = singleCourseMapper.initCourseRemain();
+        System.out.println(count);
         return res > 0;
     }
 
