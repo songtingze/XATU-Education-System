@@ -1,5 +1,10 @@
 package com.xatu.common.enums;
 
+import com.xatu.common.domain.EnumResult;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public enum CourseStateEnum {
     /**
      * 选课进行中
@@ -18,17 +23,33 @@ public enum CourseStateEnum {
         this.desc = desc;
     }
 
-    public static SchoolEnum getByCode(int code) {
-        for (SchoolEnum t : SchoolEnum.values()) {
+    public static CourseStateEnum getByCode(int code) {
+        for (CourseStateEnum t : CourseStateEnum.values()) {
             if (t.getCode() == code) {
                 return t;
             }
         }
         return null;
     }
+    public static int getByDesc(String desc) {
+        for (CourseStateEnum t : CourseStateEnum.values()) {
+            if (t.getDesc().equalsIgnoreCase(desc)) {
+                return t.getCode();
+            }
+        }
+        return -1;
+    }
+
+    public static List<EnumResult> getAllCourseStatus(){
+        List<EnumResult> courseStatus = new ArrayList<>();
+        for (CourseStateEnum t : CourseStateEnum.values()) {
+            courseStatus.add(new EnumResult(t.code,t.desc));
+        }
+        return courseStatus;
+    }
 
     public static Boolean isIn(int code) {
-        for (SchoolEnum t : SchoolEnum.values()) {
+        for (CourseStateEnum t : CourseStateEnum.values()) {
             if (t.getCode()==code) {
                 return true;
             }

@@ -29,4 +29,8 @@ public class CodeConstants {
      * 插入重复错误
      */
     public static final String INSERT_DUPLICATE_ERROR = "1004";
+    /**
+     * 插入冲突错误
+     */
+    public static final String INSERT_CONFLICT_ERROR = "1005";
 }
