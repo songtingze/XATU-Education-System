@@ -5,6 +5,7 @@ import com.xatu.common.domain.Result;
 import com.xatu.common.enums.SchoolEnum;
 import com.xatu.system.domain.Course;
 import com.xatu.system.domain.SingleCourse;
+import com.xatu.system.domain.Teacher;
 import com.xatu.system.domain.vo.CourseVo;
 import com.xatu.system.domain.vo.SelectionValue;
 import com.xatu.system.domain.vo.SingleCourseVo;
@@ -66,8 +67,8 @@ public class SingleCourseController {
     }
 
     @PostMapping("/add")
-    public Result<Boolean> addCourse (@RequestBody Course course) throws ParseException {
-        return courseService.add(course) ;
+    public Result<Boolean> addSingleCourse (@RequestBody SingleCourse singleCourse) throws ParseException {
+        return singleCourseService.add(singleCourse) ;
     }
 
     @DeleteMapping("/delete")
@@ -77,6 +78,16 @@ public class SingleCourseController {
     @DeleteMapping("/batchDelete")
     public Result<Boolean> batchDeleteSingleCourse(@RequestParam String sid){
         return singleCourseService.batchDelete(sid);
+    }
+
+    @GetMapping("/getAllCourses")
+    public Result<List<Course>> getAllCourses(){
+        return singleCourseService.getAllCourse();
+    }
+
+    @GetMapping("/getAllTeachers")
+    public Result<List<Teacher>> getAllTeachers(@RequestParam String courseNum){
+        return singleCourseService.getAllTeacherBySchool(courseNum);
     }
 
 }

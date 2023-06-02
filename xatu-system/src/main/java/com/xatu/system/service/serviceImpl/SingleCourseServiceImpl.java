@@ -10,9 +10,11 @@ import com.xatu.common.enums.*;
 import com.xatu.system.domain.Course;
 import com.xatu.system.domain.SingleCourse;
 import com.xatu.system.domain.Sys;
+import com.xatu.system.domain.Teacher;
 import com.xatu.system.domain.vo.SingleCourseVo;
 import com.xatu.system.mapper.CourseMapper;
 import com.xatu.system.mapper.SingleCourseMapper;
+import com.xatu.system.mapper.TeacherMapper;
 import com.xatu.system.service.SingleCourseService;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellType;
@@ -36,6 +38,8 @@ public class SingleCourseServiceImpl implements SingleCourseService {
     private SingleCourseMapper singleCourseMapper;
     @Resource
     private CourseMapper courseMapper;
+    @Resource
+    private TeacherMapper teacherMapper;
 
     @Override
     public PageResult<SingleCourse> getSingleCourseList(SingleCourseVo singleCourseVo) {
@@ -175,21 +179,25 @@ public class SingleCourseServiceImpl implements SingleCourseService {
         wrapper.eq(SingleCourse::getDayTime,newSingleCourse.getDayTime());
         wrapper.eq(SingleCourse::getHourPeriod,newSingleCourse.getHourPeriod());
         wrapper.eq(SingleCourse::getLocation,newSingleCourse.getLocation());
-        SingleCourse singleCourse = singleCourseMapper.selectOne(wrapper);
-        if(singleCourse == null){
+        List<SingleCourse> singleCourseList = singleCourseMapper.selectList(wrapper);
+        if(singleCourseList.size() == 0){
             return true;
         }else{
             LambdaQueryWrapper<Course> wrapper1 = new LambdaQueryWrapper<>();
             wrapper1.eq(Course::getNumber,newSingleCourse.getCourseNum());
             Course newCourse = courseMapper.selectOne(wrapper1);
-            wrapper1 = new LambdaQueryWrapper<>();
-            wrapper1.eq(Course::getNumber,singleCourse.getCourseNum());
-            Course course = courseMapper.selectOne(wrapper1);
-            if(newCourse.getPeriod() == course.getPeriod() || newCourse.getPeriod() == 3 || course.getPeriod() == 3){
-                return false;
-            }else{
-                return true;
+            for(SingleCourse singleCourse:singleCourseList){
+                wrapper1 = new LambdaQueryWrapper<>();
+                wrapper1.eq(Course::getNumber,singleCourse.getCourseNum());
+                Course course = courseMapper.selectOne(wrapper1);
+                if(!newCourse.getNumber().equalsIgnoreCase(course.getNumber())){
+                    if(newCourse.getPeriod() == course.getPeriod() || newCourse.getPeriod() == 3 || course.getPeriod() == 3){
+                        return false;
+                    }
+                }
+
             }
+            return true;
         }
 
     }
@@ -205,14 +213,32 @@ public class SingleCourseServiceImpl implements SingleCourseService {
             singleCourseMapper.updateById(coverSingleCourse(singleCourseExist,newSingleCourse));
             return Result.success();
         }else {
-            return Result.error(CodeConstants.INSERT_DUPLICATE_ERROR,"改时间地点已有其他课堂");
+            return Result.error(CodeConstants.INSERT_DUPLICATE_ERROR,"该时间地点已有其他课堂");
         }
 
     }
 
     @Override
     public Result<Boolean> add(SingleCourse newSingleCourse) throws ParseException {
-        return null;
+        if(judgeTimeSpace(newSingleCourse)){
+            LambdaQueryWrapper<SingleCourse> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(SingleCourse::getTeacher, newSingleCourse.getTeacher());
+            wrapper.eq(SingleCourse::getCourseNum, newSingleCourse.getCourseNum());
+            SingleCourse singleCourseExist = singleCourseMapper.selectOne(wrapper);
+            if(singleCourseExist != null){
+                return Result.error(CodeConstants.INSERT_DUPLICATE_ERROR,"该课程已存在");
+            }
+            if(newSingleCourse.getInfo()==null || newSingleCourse.getInfo().equalsIgnoreCase("")) newSingleCourse.setInfo("略");
+            newSingleCourse.setCourseIndex(setSingleCourseIndex(newSingleCourse));
+            newSingleCourse.setRemain(0);
+            newSingleCourse.setStatus(0);
+            newSingleCourse.setCreateTime(new Date());
+            newSingleCourse.setUpdateTime(new Date());
+            singleCourseMapper.insert(newSingleCourse);
+            return Result.success();
+        }else {
+            return Result.error(CodeConstants.INSERT_DUPLICATE_ERROR,"该时间地点已有其他课堂");
+        }
     }
 
     @Override
@@ -228,6 +254,21 @@ public class SingleCourseServiceImpl implements SingleCourseService {
             singleCourseMapper.deleteById(Integer.parseInt(id));
         }
         return Result.success();
+    }
+
+    @Override
+    public Result<List<Course>> getAllCourse() {
+        LambdaQueryWrapper<Course> wrapper = new LambdaQueryWrapper<>();
+        return Result.success(courseMapper.selectList(wrapper));
+    }
+
+    @Override
+    public Result<List<Teacher>> getAllTeacherBySchool(String courseNum) {
+        LambdaQueryWrapper<Course> wrapper1 = new LambdaQueryWrapper<>();
+        wrapper1.eq(Course::getNumber,courseNum);
+        LambdaQueryWrapper<Teacher> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Teacher::getSchool,courseMapper.selectOne(wrapper1).getSchool());
+        return Result.success(teacherMapper.selectList(wrapper));
     }
 
     public SingleCourse coverSingleCourse(SingleCourse singleCourseExist,SingleCourse newSingleCourse){

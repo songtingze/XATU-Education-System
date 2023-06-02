@@ -4,11 +4,13 @@ import com.xatu.common.domain.PageResult;
 import com.xatu.common.domain.Result;
 import com.xatu.system.domain.Course;
 import com.xatu.system.domain.SingleCourse;
+import com.xatu.system.domain.Teacher;
 import com.xatu.system.domain.vo.SelectionValue;
 import com.xatu.system.domain.vo.SingleCourseVo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
+import java.util.List;
 
 public interface SingleCourseService {
 
@@ -23,4 +25,8 @@ public interface SingleCourseService {
     public Result<Boolean> delete(int id);
 
     public Result<Boolean> batchDelete(String sid);
+
+    public Result<List<Course>> getAllCourse();
+
+    public Result<List<Teacher>> getAllTeacherBySchool(String courseNum);
 }
