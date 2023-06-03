@@ -74,3 +74,6 @@ sa-token:
   is-read-cookie: true
   # 是否从head中读取token
   is-read-head: true
+
+swagger:
+  base-package: com.xatu.system.controller

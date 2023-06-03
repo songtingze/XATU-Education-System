@@ -4,6 +4,9 @@ import com.plexpt.chatgpt.ChatGPTStream;
 import com.plexpt.chatgpt.entity.chat.Message;
 import com.plexpt.chatgpt.listener.SseStreamListener;
 import com.xatu.chat.constants.ChatConstants;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,6 +20,7 @@ import java.util.Arrays;
 /**
  * ChatGPT接口
  */
+@Api(value = "解答Controller", tags = {"解答Controller"})
 @RestController
 @RequestMapping("/chat")
 public class ChatController {
@@ -24,9 +28,10 @@ public class ChatController {
     /**
      * 调用ChatGPT接口，以SSE长连接形式返回流式输出
      */
+    @ApiOperation(value = "发送消息获取结果")
     @GetMapping("/sse")
     @CrossOrigin
-    public SseEmitter sseEmitter(String prompt) {
+    public SseEmitter sseEmitter(@ApiParam(value = "输入") String prompt) {
         ChatGPTStream chatGPTStream = ChatGPTStream.builder()
                 .timeout(600)
                 .apiKey(ChatConstants.API_KEY)

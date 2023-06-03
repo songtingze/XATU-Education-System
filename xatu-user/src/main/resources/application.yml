@@ -70,6 +70,7 @@ spring:
     # 连接超时时间
     timeout: 10s
 
-
+swagger:
+  base-package: com.xatu.user.controller
 
 

@@ -2,11 +2,16 @@ package com.xatu.common.domain;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+@ApiModel("分页")
 @Data
 public class PageQuery {
+    @ApiModelProperty("页号")
     private Integer pageNum;
+    @ApiModelProperty("页大小")
     private Integer pageSize;
 
     public static final int DEFAULT_PAGE_NUM = 1;
