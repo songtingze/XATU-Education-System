@@ -2,4 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xatu.homework.mapper.HomeworkMapper">
 
+    <select id="getStudentNum" resultType="java.lang.Integer">
+        SELECT COUNT(h.homework)
+        FROM homework h
+        WHERE h.course_num = #{courseNum} and h.course_index = #{courseIndex}
+    </select>
+    <select id="getHomeworkNum" resultType="com.xatu.homework.domain.Homework">
+        SELECT *
+        FROM homework h
+        WHERE h.course_num = #{courseNum} and h.course_index = #{courseIndex}
+        ORDER BY h.homework desc
+    </select>
+
+
 </mapper>
