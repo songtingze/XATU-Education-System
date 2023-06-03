@@ -6,7 +6,9 @@ import lombok.Data;
 public class TeacherVO {
     private String number;
     private String name;
-    private String school;
-    private String title;
+    private int school;
+    private String schoolVal;
+    private int title;
+    private String titleVal;
 
 }

@@ -14,6 +14,9 @@ import java.util.List;
 
 @Mapper
 public interface HomeworkMapper extends BaseMapper<Homework> {
+    int getStudentNum(@Param("courseNum") String courseNum,
+                      @Param("courseIndex") String courseIndex);
 
-
+    List<Homework> getHomeworkNum(@Param("courseNum") String courseNumber,
+                                  @Param("courseIndex") String courseIndex);
 }

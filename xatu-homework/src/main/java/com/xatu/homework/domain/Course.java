@@ -15,11 +15,13 @@ public class Course {
     private String number;
     private String name;
     private String nameEn;
-    private String school;
+    private Integer school;
     private Integer credit;
     private Integer creditHour;
-    private String assessment;
-    private String grade;
+    private Integer grade;
+    private Integer period;
+    private Integer isOnlyMajor;
+    private Integer assessment;
     private String info;
     private Integer status;
     private Date createTime;

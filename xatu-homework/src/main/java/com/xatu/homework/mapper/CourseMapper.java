@@ -1,11 +1,13 @@
 package com.xatu.homework.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xatu.homework.domain.Course;
 import com.xatu.homework.domain.Student;
 import com.xatu.homework.domain.vo.CourseVO;
+import com.xatu.homework.domain.vo.StudentVO;
 import com.xatu.homework.domain.vo.TeacherVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -14,20 +16,34 @@ import java.util.List;
 
 @Mapper
 public interface CourseMapper extends BaseMapper<Course> {
-    List<CourseVO> selectCourseByStudentNumber(@Param("number") Integer number);
 
     IPage<CourseVO> selectCourseByStudentNumber(@Param("page") Page page,
-                                                @Param("number") Integer number);
-
-    List<CourseVO> selectCourseByTeacherNumber(@Param("number") Integer number);
+                                                @Param("studentNum") String atudentNum,
+                                                @Param("courseNum") String courseNum,
+                                                @Param("courseName") String courseName);
 
     IPage<CourseVO> selectCourseByTeacherNumber(@Param("page") Page page,
-                                                @Param("number") Integer number);
+                                                @Param("teacherNum") String teacherNum,
+                                                @Param("courseNum") String courseNum,
+                                                @Param("courseName") String courseName);
 
-    TeacherVO selectTeacherByCourseNumber(@Param("number") String number,
-                                          @Param("index") Integer index);
 
-    IPage<Student> getStudentList(@Param("page")Page page,
-                                  @Param("number")String courseNumber,
-                                  @Param("index")Integer courseIndex);
+    CourseVO selectCourseByNumber(@Param("courseNum") String courseNum,
+                                  @Param("courseIndex") String courseIndex);
+
+
+    List<CourseVO> selectCourseByHomework(@Param("studentNum") String studentNum);
+
+    List<CourseVO> selectCourseByUCHomework(@Param("teacherNum") String teacherNum);
+
+    TeacherVO selectTeacherByTeacherNumber(@Param("teacherNum") String teacherNum);
+
+
+    int getStudentNum(@Param("courseNum") String courseNum,
+                      @Param("courseIndex") String courseIndex);
+
+    IPage<StudentVO> getStudentList(@Param("page")Page page,
+                                    @Param("courseNumber")String courseNumber,
+                                    @Param("courseIndex")String courseIndex);
+
 }

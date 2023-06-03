@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xatu.homework.mapper.StudentHomeworkMapper">
+
+
+    <select id="selectstudentHomeworkList" resultType="com.xatu.homework.domain.vo.StudentHomeworkVO">
+        select sh.homework,sh.student,sh.score,sh.content,sh.status,h.teacher,h.grade,h.deadline,h.title,h.content as homeworkContent,h.is_repeat,h.status as homeworkStatus
+        from student_homework sh
+                 inner join homework h on h.homework = sh.homework
+        where sh.student = #{studentNum}
+    </select>
+    <select id="selectTeacherHomeworkList" resultType="com.xatu.homework.domain.vo.StudentHomeworkVO">
+        select sh.homework,sh.student,sh.score,sh.content,sh.status,sh.update_time as updateTime,h.teacher,h.grade,h.deadline,h.title,h.content as homeworkContent,h.is_repeat,h.status as homeworkStatus,s.name as studentName
+        from student_homework sh
+                 inner join homework h on h.homework = sh.homework
+                 inner join student s on s.number = sh.student
+        where sh.homework = #{homework}
+    </select>
+</mapper>

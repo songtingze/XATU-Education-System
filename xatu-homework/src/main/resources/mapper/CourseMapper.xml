@@ -2,33 +2,77 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xatu.homework.mapper.CourseMapper">
     <select id="selectCourseByStudentNumber" resultType="com.xatu.homework.domain.vo.CourseVO">
-        select c.name,sc.course_num,sc.course_index,c.school,t.name as teacher
+        select c.name as courseName,sc.course_num,sc.course_index,c.school,t.name as teacherName,t.number as teacherNum,c.info
         from single_course sc
                  inner join course c on c.number = sc.course_num
                  inner join teacher t on t.number = sc.teacher
                  inner join select_course sc2 on sc2.course = sc.course_num and sc2.course_index = sc.course_index
-        where sc2.student = #{number}
+        where sc2.student = #{studentNum}
+              <if test="courseNum != null and courseNum != ''">
+                  and c.number LIKE CONCAT('%', #{courseNum}, '%')
+              </if>
+              <if test="courseName != null and courseName != ''">
+                  and c.name LIKE CONCAT('%', #{courseName}, '%')
+              </if>
     </select>
 
     <select id="selectCourseByTeacherNumber" resultType="com.xatu.homework.domain.vo.CourseVO">
-        select c.name,sc.course_num,sc.course_index,c.school,t.name as teacher
+        select c.name as courseName,sc.course_num,sc.course_index,c.school,t.name as teacherName,t.number as teacherNum,c.info
         from single_course sc
                  inner join course c on c.number = sc.course_num
                  inner join teacher t on t.number = sc.teacher
-        where sc.teacher = #{number}
+        where sc.teacher = #{teacherNum}
+        <if test="courseNum != null and courseNum != ''">
+            and c.number LIKE CONCAT('%', #{courseNum}, '%')
+        </if>
+        <if test="courseName != null and courseName != ''">
+            and c.name LIKE CONCAT('%', #{courseName}, '%')
+        </if>
     </select>
 
-    <select id="selectTeacherByCourseNumber" resultType="com.xatu.homework.domain.vo.TeacherVO">
-        select t.number,t.name,t.school,t.title
+    <select id="selectCourseByNumber" resultType="com.xatu.homework.domain.vo.CourseVO">
+        select c.name as courseName,sc.course_num,sc.course_index,c.school,t.name as teacherName,t.number as teacherNum,c.info
         from single_course sc
-                 inner join teacher t on t.number = sc.teacher
-        where sc.course_num = #{number} and sc.course_index = #{index}
+        inner join course c on c.number = sc.course_num
+        inner join teacher t on t.number = sc.teacher
+        where sc.course_num = #{courseNum} and sc.course_index = #{courseIndex}
     </select>
 
-    <select id="getStudentList" resultType="com.xatu.homework.domain.Student">
-        select *
+    <select id="selectCourseByHomework" resultType="com.xatu.homework.domain.vo.CourseVO">
+        select c.name as courseName,sc.course_num,sc.course_index
+        from single_course sc
+                 inner join course c on c.number = sc.course_num
+                 inner join homework h on h.course_num = c.number
+                 inner join student_homework sh on sh.homework = h.homework
+        where sh.student = #{studentNum} and sh.status = 0
+    </select>
+
+
+
+    <select id="selectTeacherByTeacherNumber" resultType="com.xatu.homework.domain.vo.TeacherVO">
+        select t.number,t.name,t.school,t.title
+        from teacher t
+        where t.number = #{teacherNum}
+    </select>
+
+    <select id="getStudentNum" resultType="java.lang.Integer">
+        select COUNT(sc.student)
+        from select_course sc
+        WHERE sc.course = #{courseNum} and sc.course_index = #{courseIndex}
+    </select>
+
+    <select id="getStudentList" resultType="com.xatu.homework.domain.vo.StudentVO">
+        select s.name,s.number,s.school,s.class_number
         from student s
                  inner join select_course sc on sc.student = s.number
-        where sc.course = #{number} and sc.course_index = #{index}
+        where sc.course = #{courseNumber} and sc.course_index = #{courseIndex}
+    </select>
+    <select id="selectCourseByUCHomework" resultType="com.xatu.homework.domain.vo.CourseVO">
+        select c.name as courseName,sc.course_num,sc.course_index
+        from single_course sc
+                 inner join course c on c.number = sc.course_num
+                 inner join homework h on h.course_num = sc.course_num and h.course_index = sc.course_index
+                 inner join student_homework sh on sh.homework = h.homework
+        where sc.teacher = #{teacherNum} and sh.score = null
     </select>
 </mapper>

@@ -13,15 +13,13 @@ public class StudentHomework {
     @TableId(type = IdType.AUTO)
     private Integer id;
     private String homework;
-    private Integer student;
+    private String student;
     private Float score;
     private String content;
     private Integer isAppendix;
     private String appendix;
-    private String status;
-    @TableField( fill = FieldFill.INSERT)
+    private Integer status;
     private Date createTime;
-    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
 }
