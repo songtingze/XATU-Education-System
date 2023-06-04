@@ -1,7 +1,6 @@
 package com.xatu.user.service.serviceImpl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.xatu.user.domain.Student;
 import com.xatu.user.domain.Teacher;
 import com.xatu.user.mapper.TeacherMapper;
 import com.xatu.user.service.TeacherService;
