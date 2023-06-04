@@ -32,9 +32,9 @@ public interface StudentService {
     boolean changePassword(int id, String oldPwd, String newPwd);
 
     /**
-     * 获取学生个人信息
-     * @param id 学生id
-     * @return 返回学生信息
+     * 更新学生个人信息
+     * @param student 学生
+     * @return 更新后的学生信息
      */
-    Student stuInfo(int id);
+    Student updateInfo(Student student);
 }

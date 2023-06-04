@@ -1,6 +1,7 @@
 package com.xatu.user.service.serviceImpl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.xatu.common.enums.SchoolEnum;
 import com.xatu.user.domain.Student;
 import com.xatu.user.mapper.StudentMapper;
 import com.xatu.user.service.StudentService;
@@ -62,14 +63,26 @@ public class StudentServiceImpl implements StudentService {
         return false;
     }
 
+//    @Override
+//    public Student stuInfo (int id) {
+//        LambdaQueryWrapper<Student> wrapper = new LambdaQueryWrapper<>();
+//        wrapper.eq(Student::getId, id);
+//        Student student = studentMapper.selectOne(wrapper);
+//        if (student != null) {
+//            student.setPassword("");
+//        }
+//        return student;
+//    }
+
     @Override
-    public Student stuInfo (int id) {
+    public Student updateInfo(Student student){
         LambdaQueryWrapper<Student> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Student::getId, id);
-        Student student = studentMapper.selectOne(wrapper);
-        if (student != null) {
-            student.setPassword("");
-        }
-        return student;
+        wrapper.eq(Student::getId, student.getId());
+        Student student1 = studentMapper.selectOne(wrapper);
+        student1.setSex(student.getSex());
+        student1.setBirth(student.getBirth());
+        student1.setNation(student.getNation());
+        studentMapper.updateById(student1);
+        return student1;
     }
 }

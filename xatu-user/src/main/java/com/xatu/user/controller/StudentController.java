@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
 import com.xatu.common.constant.CodeConstants;
 import com.xatu.common.domain.Result;
+import com.xatu.common.enums.SchoolEnum;
 import com.xatu.user.domain.Student;
 import com.xatu.user.domain.vo.StudentVo;
 import com.xatu.user.service.StudentService;
@@ -29,6 +30,7 @@ public class StudentController {
             //用student表中的id登录
             StpUtil.login(studentVo.getId());
             studentVo.setUserToken(StpUtil.getTokenValue());
+            studentVo.setSchoolValue(SchoolEnum.getByCode(student.getSchool()).getDesc());
             return Result.success(studentVo, "登录成功！");
         } else {
             System.out.println("账号密码错误");
@@ -67,14 +69,14 @@ public class StudentController {
         }
     }
 
-    @RequestMapping("/stuInfo")
-    public Result<Student> stuInfoController(@RequestParam int id) {
-        Student student = studentService.stuInfo(id);
-        if (student != null) {
-            return Result.success(student);
+    @RequestMapping("/update")
+    public Result<Student> updateController(@RequestBody Student student){
+        Student student1 = studentService.updateInfo(student);
+        if (student1 != null) {
+            return Result.success(student1);
         }
         else {
-            return Result.error(CodeConstants.ERROR, "获取用户信息失败");
+            return Result.error(CodeConstants.ERROR, "更新用户信息失败");
         }
     }
 }

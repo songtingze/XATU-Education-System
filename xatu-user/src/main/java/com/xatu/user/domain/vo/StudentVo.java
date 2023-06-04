@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 public class StudentVo extends Student {
     private String userToken;
+    private String schoolValue;
 
     public StudentVo (Student student) {
         this.setId(student.getId());

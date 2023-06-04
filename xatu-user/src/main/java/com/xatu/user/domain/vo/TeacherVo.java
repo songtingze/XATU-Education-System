@@ -11,6 +11,8 @@ import lombok.Data;
 @Data
 public class TeacherVo extends Teacher {
     private String userToken;
+    private String schoolValue;
+    private String titleValue;
 
     public TeacherVo (Teacher teacher) {
         this.setId(teacher.getId());

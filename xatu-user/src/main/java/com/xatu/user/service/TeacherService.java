@@ -33,9 +33,9 @@ public interface TeacherService {
     boolean changePassword(int id, String oldPwd, String newPwd);
 
     /**
-     * 获取教师个人信息
-     * @param id 教师id
-     * @return 返回学教师信息
+     * 更新教师信息
+     * @param teacher 教师
+     * @return 更新后的教师信息
      */
-    Teacher teaInfo(int id);
+    Teacher updateInfo(Teacher teacher);
 }

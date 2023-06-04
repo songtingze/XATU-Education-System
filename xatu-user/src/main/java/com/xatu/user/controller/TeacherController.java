@@ -4,6 +4,8 @@ import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
 import com.xatu.common.constant.CodeConstants;
 import com.xatu.common.domain.Result;
+import com.xatu.common.enums.SchoolEnum;
+import com.xatu.common.enums.TitleEnum;
 import com.xatu.user.domain.Student;
 import com.xatu.user.domain.Teacher;
 import com.xatu.user.domain.vo.TeacherVo;
@@ -30,6 +32,8 @@ public class TeacherController {
             //用teacher表中的id登录
             StpUtil.login(teacherVo.getId());
             teacherVo.setUserToken(StpUtil.getTokenValue());
+            teacherVo.setSchoolValue(SchoolEnum.getByCode(teacher.getSchool()).getDesc());
+            teacherVo.setTitleValue(TitleEnum.getByCode(teacher.getTitle()).getDesc());
             return Result.success(teacherVo, "登录成功！");
         } else {
             System.out.println("账号密码错误");
@@ -68,14 +72,14 @@ public class TeacherController {
         }
     }
 
-    @RequestMapping("/teaInfo")
-    public Result<Teacher> teaInfoController(@RequestParam int id) {
-        Teacher teacher = teacherService.teaInfo(id);
-        if (teacher != null) {
-            return Result.success(teacher);
+    @RequestMapping("/update")
+    public Result<Teacher> updateController(@RequestBody Teacher teacher){
+        Teacher teacher1 = teacherService.updateInfo(teacher);
+        if (teacher1 != null) {
+            return Result.success(teacher1);
         }
         else {
-            return Result.error(CodeConstants.ERROR, "获取用户信息失败");
+            return Result.error(CodeConstants.ERROR, "更新用户信息失败");
         }
     }
 

@@ -17,8 +17,8 @@ public class Teacher {
     private String name;
     private String number;
     private String password;
-    private String school;
-    private String title;
+    private int school;
+    private int title;
     private Date entryTime;
     private String sex;
     private Date birth;
