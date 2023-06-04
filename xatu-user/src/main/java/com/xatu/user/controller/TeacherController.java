@@ -10,6 +10,9 @@ import com.xatu.user.domain.Student;
 import com.xatu.user.domain.Teacher;
 import com.xatu.user.domain.vo.TeacherVo;
 import com.xatu.user.service.TeacherService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -17,15 +20,17 @@ import javax.annotation.Resource;
 /**
  * @author Wang Lei
  */
+@Api(value = "老师用户Controller", tags = {"老师用户Controller"})
 @RestController
 @RequestMapping("/user/tea")
 public class TeacherController {
     @Resource
     TeacherService teacherService;
 
+    @ApiOperation(value = "教师登录")
     @SaIgnore //忽略鉴权校验
     @PostMapping("/login")
-    public Result<Teacher> loginController(@RequestParam String number, @RequestParam String password) {
+    public Result<Teacher> loginController(@ApiParam("教师工号") @RequestParam String number, @ApiParam("密码") @RequestParam String password) {
         Teacher teacher = teacherService.login(number, password);
         if (teacher != null) {
             TeacherVo teacherVo = new TeacherVo(teacher);
@@ -41,8 +46,9 @@ public class TeacherController {
         }
     }
 
+    @ApiOperation(value = "教师注销")
     @PostMapping("/logout")
-    public Result logoutController(@RequestParam int id) {
+    public Result logoutController(@ApiParam("教师用户id") @RequestParam int id) {
         StpUtil.logout(id);
         System.out.println("当前是否处于登录状态：" + StpUtil.isLogin());
         //获取当前会话账号id, 如果未登录，则返回null
@@ -50,8 +56,9 @@ public class TeacherController {
         return Result.success();
     }
 
-    @RequestMapping("/changePhoto")
-    public Result<Teacher> changePhotoController(@RequestParam int id, @RequestParam String photoUrl) {
+    @ApiOperation(value = "教师修改头像")
+    @PostMapping("/changePhoto")
+    public Result<Teacher> changePhotoController(@ApiParam("教师用户id") @RequestParam int id, @ApiParam("教师头像Url") @RequestParam String photoUrl) {
         Teacher tea = teacherService.changePhoto(id, photoUrl);
         if (tea != null) {
             return Result.success(tea,"照片修改成功！");
@@ -61,8 +68,9 @@ public class TeacherController {
         }
     }
 
-    @RequestMapping("/changePassword")
-    public Result changePwdController(@RequestParam int id, @RequestParam String oldPwd, @RequestParam String newPwd) {
+    @ApiOperation(value = "教师修改密码")
+    @PostMapping("/changePassword")
+    public Result changePwdController(@ApiParam("教师用户id") @RequestParam int id, @ApiParam("旧密码") @RequestParam String oldPwd, @ApiParam("新密码") @RequestParam String newPwd) {
         boolean flag = teacherService.changePassword(id, oldPwd, newPwd);
         if (flag) {
             return Result.success("密码修改成功！");
@@ -72,8 +80,9 @@ public class TeacherController {
         }
     }
 
-    @RequestMapping("/update")
-    public Result<Teacher> updateController(@RequestBody Teacher teacher){
+    @ApiOperation(value = "教师修改个人信息")
+    @PostMapping("/update")
+    public Result<Teacher> updateController(@ApiParam("教师新修改的信息") @RequestBody Teacher teacher){
         Teacher teacher1 = teacherService.updateInfo(teacher);
         if (teacher1 != null) {
             return Result.success(teacher1);
