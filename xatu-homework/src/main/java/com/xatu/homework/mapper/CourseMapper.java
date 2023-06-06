@@ -20,12 +20,14 @@ public interface CourseMapper extends BaseMapper<Course> {
     IPage<CourseVO> selectCourseByStudentNumber(@Param("page") Page page,
                                                 @Param("studentNum") String atudentNum,
                                                 @Param("courseNum") String courseNum,
-                                                @Param("courseName") String courseName);
+                                                @Param("courseName") String courseName,
+                                                @Param("period") int period);
 
     IPage<CourseVO> selectCourseByTeacherNumber(@Param("page") Page page,
                                                 @Param("teacherNum") String teacherNum,
                                                 @Param("courseNum") String courseNum,
-                                                @Param("courseName") String courseName);
+                                                @Param("courseName") String courseName,
+                                                @Param("period") int period);
 
 
     CourseVO selectCourseByNumber(@Param("courseNum") String courseNum,

@@ -10,13 +10,16 @@ import com.xatu.common.enums.CourseAssessmentEnum;
 import com.xatu.common.enums.CoursePeriodEnum;
 import com.xatu.common.enums.SchoolEnum;
 import com.xatu.common.enums.TitleEnum;
+import com.xatu.homework.domain.Attachment;
 import com.xatu.homework.domain.Course;
+import com.xatu.homework.domain.ScheduleTask;
 import com.xatu.homework.domain.Student;
 import com.xatu.homework.domain.vo.CourseVO;
 import com.xatu.homework.domain.vo.StudentVO;
 import com.xatu.homework.domain.vo.TeacherVO;
 import com.xatu.homework.mapper.AttachmentMapper;
 import com.xatu.homework.mapper.CourseMapper;
+import com.xatu.homework.mapper.ScheduleTaskMapper;
 import com.xatu.homework.service.CourseService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -29,13 +32,20 @@ import java.util.stream.Collectors;
 public class CourseImpl implements CourseService {
     @Resource
     private CourseMapper courseMapper;
+
+    @Resource
+    private ScheduleTaskMapper scheduleTaskMapper;
     @Resource
     private AttachmentMapper attachmentMapper;
     //获取配置文件中的配置 为属性动态赋值 注解@Value
     @Override
     public PageResult<CourseVO> listStudentSelectedCourse(String studentNumber,String courseNum,String courseName,Integer current,Integer pageSize){
         Page page = new Page(current, pageSize);
-        IPage<CourseVO> listResult = courseMapper.selectCourseByStudentNumber(page,studentNumber,courseNum,courseName);
+        LambdaQueryWrapper<ScheduleTask> lqw = new LambdaQueryWrapper<ScheduleTask>();
+        lqw.eq(ScheduleTask::getStatus,1);
+        ScheduleTask scheduleTask = scheduleTaskMapper.selectOne(lqw);
+        int period = scheduleTask.getPeriod();
+        IPage<CourseVO> listResult = courseMapper.selectCourseByStudentNumber(page,studentNumber,courseNum,courseName,period);
         List<CourseVO> selectCourseVOList = listResult.getRecords().stream().map(src -> {
             CourseVO dst = new CourseVO();
             BeanUtils.copyProperties(src, dst);
@@ -48,7 +58,11 @@ public class CourseImpl implements CourseService {
     @Override
     public PageResult<CourseVO> listTeacherCourse(String teacherNumber,String courseNum,String courseName,Integer current,Integer pageSize){
         Page page = new Page(current, pageSize);
-        IPage<CourseVO> listResult = courseMapper.selectCourseByTeacherNumber(page,teacherNumber,courseNum,courseName);
+        LambdaQueryWrapper<ScheduleTask> lqw = new LambdaQueryWrapper<ScheduleTask>();
+        lqw.eq(ScheduleTask::getStatus,1);
+        ScheduleTask scheduleTask = scheduleTaskMapper.selectOne(lqw);
+        int period = scheduleTask.getPeriod();
+        IPage<CourseVO> listResult = courseMapper.selectCourseByTeacherNumber(page,teacherNumber,courseNum,courseName,period);
         List<CourseVO> selectCourseVOList = listResult.getRecords().stream().map(src -> {
             CourseVO dst = new CourseVO();
             BeanUtils.copyProperties(src, dst);

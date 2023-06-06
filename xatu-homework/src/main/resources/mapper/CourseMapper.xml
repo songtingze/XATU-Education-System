@@ -2,18 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xatu.homework.mapper.CourseMapper">
     <select id="selectCourseByStudentNumber" resultType="com.xatu.homework.domain.vo.CourseVO">
-        select c.name as courseName,sc.course_num,sc.course_index,c.school,t.name as teacherName,t.number as teacherNum,c.info
+        select c.name as courseName,sc.course_num,sc.course_index,c.school,t.name as teacherName,t.number as
+        teacherNum,c.info
         from single_course sc
-                 inner join course c on c.number = sc.course_num
-                 inner join teacher t on t.number = sc.teacher
-                 inner join select_course sc2 on sc2.course = sc.course_num and sc2.course_index = sc.course_index
+        inner join course c on c.number = sc.course_num
+        inner join teacher t on t.number = sc.teacher
+        inner join select_course sc2 on sc2.course = sc.course_num and sc2.course_index = sc.course_index
         where sc2.student = #{studentNum}
-              <if test="courseNum != null and courseNum != ''">
-                  and c.number LIKE CONCAT('%', #{courseNum}, '%')
-              </if>
-              <if test="courseName != null and courseName != ''">
-                  and c.name LIKE CONCAT('%', #{courseName}, '%')
-              </if>
+        <if test="courseNum != null and courseNum != ''">
+            and c.number LIKE CONCAT('%', #{courseNum}, '%')
+        </if>
+        <if test="courseName != null and courseName != ''">
+            and c.name LIKE CONCAT('%', #{courseName}, '%')
+        </if>
+        <if test="period != null">
+            and c.period = #{period} or c.period = 3
+        </if>
+
     </select>
 
     <select id="selectCourseByTeacherNumber" resultType="com.xatu.homework.domain.vo.CourseVO">
@@ -27,6 +32,9 @@
         </if>
         <if test="courseName != null and courseName != ''">
             and c.name LIKE CONCAT('%', #{courseName}, '%')
+        </if>
+        <if test="period != null">
+            and c.period = #{period} or c.period = 3
         </if>
     </select>
 
