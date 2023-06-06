@@ -57,4 +57,5 @@ public class SelectCourseController {
         }
         return Result.success(courseLists,"查询成功");
     }
+
 }
