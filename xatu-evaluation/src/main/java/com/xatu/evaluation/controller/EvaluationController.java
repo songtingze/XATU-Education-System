@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("/select/course")
-public class SelectCourseController {
+public class EvaluationController {
     @Resource
     private SelectCourseService selectCourseService;
 
