@@ -108,3 +108,5 @@ sa-token:
   # 是否从head中读取token
   is-read-head: true
 
+front-page:
+  host: http://localhost:8080

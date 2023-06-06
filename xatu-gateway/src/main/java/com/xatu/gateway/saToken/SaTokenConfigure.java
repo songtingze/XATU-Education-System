@@ -7,6 +7,7 @@ import cn.dev33.satoken.reactor.filter.SaReactorFilter;
 import cn.dev33.satoken.router.SaHttpMethod;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.server.ServerWebExchange;
@@ -18,6 +19,9 @@ import org.springframework.web.server.ServerWebExchange;
 @Configuration
 public class SaTokenConfigure {
     // 注册 Sa-Token全局过滤器
+    @Value("${front-page.host}")
+    private String frontHost;
+
     @Bean
     public SaReactorFilter getSaReactorFilter() {
         return new SaReactorFilter()
@@ -59,7 +63,7 @@ public class SaTokenConfigure {
                     // ---------- 设置跨域响应头 ----------
                     SaHolder.getResponse()
                             // 允许指定域访问跨域资源
-                            .setHeader("Access-Control-Allow-Origin", "http://localhost:8080")
+                            .setHeader("Access-Control-Allow-Origin", frontHost)
                             .setHeader("Access-Control-Allow-Credentials", "true")
 //                            .setHeader("Content-Type", "application/json; charset=utf-8")
                             // 允许所有请求方式
