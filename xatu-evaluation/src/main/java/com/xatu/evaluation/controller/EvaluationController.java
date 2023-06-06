@@ -9,8 +9,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@CrossOrigin
-@RequestMapping("/select/course")
+@RequestMapping("/evaluation")
 public class EvaluationController {
     @Resource
     private SelectCourseService selectCourseService;
