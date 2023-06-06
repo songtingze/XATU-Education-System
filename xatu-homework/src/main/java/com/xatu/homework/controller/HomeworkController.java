@@ -12,6 +12,8 @@ import com.xatu.homework.domain.vo.StudentVO;
 import com.xatu.homework.domain.vo.TeacherVO;
 import com.xatu.homework.service.CourseService;
 import com.xatu.homework.service.HomeworkService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+@Api(value = "教务信息管理Controller", tags = {"教务信息管理Controller"})
 @RestController
 @RequestMapping("/homework")
 public class HomeworkController {
@@ -37,6 +40,7 @@ public class HomeworkController {
     /**
      * 获取学生选课列表（分页）
      */
+    @ApiOperation(value = "获取学生选课列表")
     @GetMapping("/platform/stu/page")
     public PageResult<CourseVO> studentCourse(@RequestParam("userId") String studentNumber,
                                               String courseNum,
@@ -49,6 +53,7 @@ public class HomeworkController {
     /**
      * 获取教师教授课程（分页）
      */
+    @ApiOperation(value = "获取教师教授课程")
     @GetMapping("/platform/tec/page")
     public PageResult<CourseVO> teacherCourse(@RequestParam("userId") String teacherNumber,
                                               String courseNum,
@@ -62,6 +67,7 @@ public class HomeworkController {
     /**
      * 获取未完成作业课程列表
      */
+    @ApiOperation(value = "获取未完成作业课程列表")
     @GetMapping("/platform/task")
     public PageResult<CourseVO> courseHomework(@RequestParam("userId") String studentNum) {
         return courseService.listHomeworkCourse(studentNum);
@@ -70,6 +76,7 @@ public class HomeworkController {
     /**
      * 获取未批改作业课程列表
      */
+    @ApiOperation(value = "获取未批改作业课程列表")
     @GetMapping("/platform/tec/task")
     public PageResult<CourseVO> uncorrectHomework(@RequestParam("userId") String teacherNumber) {
         return courseService.listUncorrectHomeworkCourse(teacherNumber);
@@ -79,6 +86,7 @@ public class HomeworkController {
     /**
      * 获取课程信息
      */
+    @ApiOperation(value = "获取课程信息")
     @GetMapping("/platform/info")
     public Result<CourseVO> courseInfo(@RequestParam String courseNumber,
                                        @RequestParam String courseIndex) {
@@ -90,6 +98,7 @@ public class HomeworkController {
     /**
      * 获取课程教授老师信息
      */
+    @ApiOperation(value = "获取课程教授老师信息")
     @GetMapping("/platform/tec/info")
     public Result<TeacherVO> teacherInfo(@RequestParam String courseNumber,
                                          @RequestParam String courseIndex) {
@@ -99,6 +108,7 @@ public class HomeworkController {
     /**
      * 获取选课学生数
      */
+    @ApiOperation(value = "获取选课学生数")
     @GetMapping("/platform/studentNum")
     public Result<Integer> studentNum(@RequestParam String courseNumber,
                                       @RequestParam String courseIndex) {
@@ -109,6 +119,7 @@ public class HomeworkController {
     /**
      * 获取选取课程的全部学生
      */
+    @ApiOperation(value = "获取选取课程的全部学生")
     @GetMapping("/platform/tec/studentList")
     public PageResult<StudentVO> studentList(@RequestParam String courseNumber,
                                              @RequestParam String courseIndex,
@@ -121,7 +132,7 @@ public class HomeworkController {
     /**
      * 课程作业数
      */
-
+    @ApiOperation(value = "课程作业数")
     @GetMapping("/count")
     public Result<Integer> homeworkNum(@RequestParam String courseNumber,
                                        @RequestParam String courseIndex) {
@@ -133,6 +144,7 @@ public class HomeworkController {
     /**
      * 获取发布课程作业列表
      */
+    @ApiOperation(value = "获取发布课程作业列表")
     @GetMapping("/list")
     public PageResult<Homework> homeworklist(@RequestParam String courseNumber,
                                              @RequestParam String courseIndex,
@@ -145,6 +157,7 @@ public class HomeworkController {
     /**
      * 获取课程作业列表
      */
+    @ApiOperation(value = "获取课程作业列表")
     @GetMapping("/stu/list")
     public PageResult<StudentHomeworkVO> studentHomeworkList(@RequestParam String studentNumber,
                                                            @RequestParam(defaultValue = "1") Integer current,
@@ -155,6 +168,7 @@ public class HomeworkController {
     /**
      * 获取课程作业列表
      */
+    @ApiOperation(value = "获取课程作业列表（教师）")
     @GetMapping("/tec/list")
     public PageResult<StudentHomeworkVO> teacherHomeworkList(@RequestParam String homework,
                                                              @RequestParam(defaultValue = "1") Integer current,
@@ -166,6 +180,7 @@ public class HomeworkController {
     /**
      * 获取课程作业
      */
+    @ApiOperation(value = "获取课程作业（查询）")
     @GetMapping("/search")
     public Result<Homework> search(@RequestParam String homeworkNumber) {
         return homeworkService.getHomeworkByNumber(homeworkNumber);
@@ -175,6 +190,7 @@ public class HomeworkController {
     /**
      * 发布课程作业
      */
+    @ApiOperation(value = "发布课程作业")
     @PostMapping("/insert")
     public Result<String> insert(@RequestParam String content,
                                  @RequestParam String deadline,
@@ -223,6 +239,7 @@ public class HomeworkController {
     /**
      * 修改课程作业发布
      */
+    @ApiOperation(value = "修改课程作业发布")
     @PostMapping("/update")
     public Result<String> update(@RequestParam String content,
                                  @RequestParam String deadline,
@@ -257,6 +274,7 @@ public class HomeworkController {
     /**
      * 修改课程作业分数
      */
+    @ApiOperation(value = "修改课程作业分数")
     @PostMapping("/score")
     public Result<String> score(@RequestParam String homework,
                                 @RequestParam String studentNumber,
@@ -271,6 +289,7 @@ public class HomeworkController {
     /**
      * 删除课程作业
      */
+    @ApiOperation(value = "删除课程作业")
     @GetMapping("/delete")
     public Result<String> delete(@RequestParam String homeworkNum) {
         if (!homeworkService.deleteHomework(homeworkNum)) return Result.error("500", "删除失败");
@@ -280,6 +299,7 @@ public class HomeworkController {
     /**
      * 提交作业
      */
+    @ApiOperation(value = "提交作业")
     @PostMapping("/submit")
     public Result<String> submitHomework(@RequestParam String homework,
                                          @RequestParam String studentNumber,
@@ -293,6 +313,7 @@ public class HomeworkController {
     /**
      * 上传附件
      */
+    @ApiOperation(value = "上传附件")
     @PostMapping("/upload")
     public Result upload(@RequestParam MultipartFile file) throws IOException {
 //        System.out.println("upload--file is"+file);
@@ -302,6 +323,7 @@ public class HomeworkController {
     /**
      * 下载附件
      */
+    @ApiOperation(value = "下载附件")
     @GetMapping("/download")
     public Result downloadFile(HttpServletResponse response, @RequestParam String fileIndex, @RequestParam String fileName) throws IOException {
         // 清空输出流
