@@ -50,6 +50,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        <!--    项目公共库    -->
+        <dependency>
+            <groupId>com.xatu</groupId>
+            <artifactId>xatu-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
