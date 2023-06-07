@@ -182,7 +182,7 @@ public class CourseServiceImpl implements CourseService {
             course.setIsOnlyMajor(isOnlyMajor);
             course.setAssessment(assessment);
             course.setInfo(info);
-            course.setStatus(0);
+            course.setStatus(1);
             course.setCreateTime(new Date());
             course.setUpdateTime(new Date());
             courseList.add(course);
@@ -267,7 +267,7 @@ public class CourseServiceImpl implements CourseService {
             return Result.error(CodeConstants.INSERT_DUPLICATE_ERROR,"该课程已存在");
         }
         if(newCourse.getInfo()==null || newCourse.getInfo().equalsIgnoreCase("")) newCourse.setInfo("略");
-        newCourse.setStatus(0);
+        newCourse.setStatus(1);
         newCourse.setCreateTime(new Date());
         newCourse.setUpdateTime(new Date());
         courseMapper.insert(newCourse);

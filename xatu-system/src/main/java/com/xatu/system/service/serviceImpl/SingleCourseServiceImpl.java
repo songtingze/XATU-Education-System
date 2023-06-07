@@ -150,9 +150,9 @@ public class SingleCourseServiceImpl implements SingleCourseService {
             singleCourse.setHourPeriod(hourPeriod);
             singleCourse.setLocation(location);
             singleCourse.setCapacity(Integer.parseInt(capacity));
-            singleCourse.setRemain(0);
+            singleCourse.setRemain(Integer.parseInt(capacity));
             singleCourse.setInfo(info);
-            singleCourse.setStatus(0);
+            singleCourse.setStatus(1);
             singleCourse.setCreateTime(new Date());
             singleCourse.setUpdateTime(new Date());
             singleCourseList.add(singleCourse);
@@ -230,8 +230,8 @@ public class SingleCourseServiceImpl implements SingleCourseService {
             }
             if(newSingleCourse.getInfo()==null || newSingleCourse.getInfo().equalsIgnoreCase("")) newSingleCourse.setInfo("略");
             newSingleCourse.setCourseIndex(setSingleCourseIndex(newSingleCourse));
-            newSingleCourse.setRemain(0);
-            newSingleCourse.setStatus(0);
+            newSingleCourse.setRemain(newSingleCourse.getCapacity());
+            newSingleCourse.setStatus(1);
             newSingleCourse.setCreateTime(new Date());
             newSingleCourse.setUpdateTime(new Date());
             singleCourseMapper.insert(newSingleCourse);
